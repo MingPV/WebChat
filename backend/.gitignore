@@ -1,6 +1,6 @@
-.DS_Store
-bin/
-/.idea
-.idea
+node_modules
+public
 .env
-.vscode
+*.log
+.DS_Store
+storage/public

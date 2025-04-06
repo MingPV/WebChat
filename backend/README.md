@@ -1,344 +1,254 @@
-# Go Backend Clean Architecture
+# [express-mongodb-rest-api-typescript-boilerplate](https://github.com/watscho/express-mongodb-rest-api-boilerplate)
 
-A Go (Golang) Backend Clean Architecture project with Gin, MongoDB, JWT Authentication Middleware, Test, and Docker.
+[![](https://img.shields.io/badge/author-@watscho-blue.svg)](https://www.linkedin.com/in/watscho)
+[![](https://api.codacy.com/project/badge/Grade/f4ea86b0cf474e928d34f3723aed349e)](https://app.codacy.com/gh/watscho/express-mongodb-rest-api-boilerplate)
+[![GitHub license](https://img.shields.io/github/license/watscho/express-mongodb-rest-api-boilerplate)](https://github.com/watscho/express-mongodb-rest-api-boilerplate/blob/master/LICENSE)
 
-![Go Backend Clean Architecture](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-backend-clean-architecture.png?raw=true)
+## Authentication from scratch `TypeScript`
 
-**You can use this project as a template to build your Backend project in the Go language on top of this project.**
+- Sign In
+- Sign Up,
+- Reset Password
+- Update Profile
+- Update Password
+- Update Email
+- Update User Avatar
+- Delete Profile
+- Reset Password by E-mail
+- Verification Profile by E-mail
+- Signed Out Access Token blacklisting by Redis
+- Image Upload (public storage, Many-to-many relationships)
+- Multi language by i18Next
+- E-mail notifications
 
-Before creating this project, I have gone through more than 20 projects related to the Go(Golang) Clean Architecture on GitHub.
+### Package list
 
-Thanks to all those projects, I learned a lot from all of those. As I keep saying:
+| Package                 | Description                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ts-node                 | TypeScript execution and REPL for node.js, with source map and native ESM support.                                                                                                                                                                                                                                                                             |
+| ts-node-dev             | It restarts target node process when any of required files changes (as standard node-dev) but shares Typescript compilation process between restarts. This significantly increases speed of restarting comparing to node-dev -r ts-node/register ..., nodemon -x ts-node ... variations because there is no need to instantiate ts-node compilation each time. |
+| tsc-alias               | Replace alias paths with relative paths after typescript compilation. You can add aliases that reference other projects outside your tsconfig.json project by providing a relative path to the baseUrl.                                                                                                                                                        |
+| tsconfig-paths          | Use this to load modules whose location is specified in the paths section of tsconfig.json or jsconfig.json. Both loading at run-time and via API are supported.                                                                                                                                                                                               |
+| typescript              | TypeScript is a language for application-scale JavaScript. TypeScript adds optional types to JavaScript that support tools for large-scale JavaScript applications for any browser, for any host, on any OS                                                                                                                                                    |
+| cross-env               | Run scripts that set and use environment variables across platforms                                                                                                                                                                                                                                                                                            |
+| express                 | Fast, unopinionated, minimalist web framework for Node.js.                                                                                                                                                                                                                                                                                                     |
+| email-templates         | Create, preview (browser/iOS Simulator), and send custom email templates for Node.js. Made for Forward Email and Lad.                                                                                                                                                                                                                                          |
+| nodemailer              | Easy as cake e-mail sending from your Node.js applications                                                                                                                                                                                                                                                                                                     |
+| ejs                     | Embedded JavaScript templates                                                                                                                                                                                                                                                                                                                                  |
+| cors                    | CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.                                                                                                                                                                                                                                     |
+| bcrypt                  | A library to help you hash passwords.                                                                                                                                                                                                                                                                                                                          |
+| dotenv                  | Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.                                                                                                                                              |
+| http-status-codes       | Constants enumerating the HTTP status codes. Based on the Java Apache HttpStatus API.                                                                                                                                                                                                                                                                          |
+| i18next                 | i18next is a very popular internationalization framework for browser or any other javascript environment (eg. Node.js, Deno).                                                                                                                                                                                                                                  |
+| i18next-http-middleware | This is a middleware to be used with Node.js web frameworks like express or Fastify and also for Deno.                                                                                                                                                                                                                                                         |
+| jsonwebtoken            | An implementation of JSON Web Tokens.                                                                                                                                                                                                                                                                                                                          |
+| mongoose                | Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment. Mongoose supports Node.js and Deno (alpha).                                                                                                                                                                                                                        |
+| randomstring            | A module for generating random strings                                                                                                                                                                                                                                                                                                                         |
+| redis                   | A modern, high performance Redis client                                                                                                                                                                                                                                                                                                                        |
+| validator               | A library of string validators and sanitizers.                                                                                                                                                                                                                                                                                                                 |
+| winston                 | A logger for just about everything.                                                                                                                                                                                                                                                                                                                            |
+| eslint                  | An AST-based pattern checker for JavaScript.                                                                                                                                                                                                                                                                                                                   |
+| eslint-config-prettier  | Turns off all rules that are unnecessary or might conflict with Prettier.                                                                                                                                                                                                                                                                                      |
+| eslint-plugin-import    | This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names. All the goodness that the ES2015+ static module syntax intends to provide, marked up in your editor.                                                                                                        |
+| eslint-plugin-prettier  | Runs Prettier as an ESLint rule and reports differences as individual ESLint issues.                                                                                                                                                                                                                                                                           |
+| eslint-plugin-unicorn   | More than 100 powerful ESLint rules                                                                                                                                                                                                                                                                                                                            |
+| prettier                | Prettier is an opinionated code formatter                                                                                                                                                                                                                                                                                                                      |
 
-> The best way to learn to code is to code. But, to write good code, you will also have to read good code. Make a habit of reading good code. You can find many open-source projects on GitHub and start reading.
+<hr/>
 
-Then for the implementation part, I combined all of my ideas, experiences, and learnings from those projects to create this project.
+### Redis
 
-And as always I would love to get feedback on my project. This helps everyone and most importantly me.
+Download Redis for Windows from the official [website](https://redis.io/docs/getting-started/installation/install-redis-on-windows/).
 
-Learn about this project architecture in detail from the blogs mentioned below:
-
-- [Go Backend Clean Architecture](https://outcomeschool.com/blog/go-backend-clean-architecture)
-- [Go JWT Authentication Middleware](https://outcomeschool.com/blog/go-jwt-authentication-middleware)
-- [Configuration with Viper in Go](https://outcomeschool.com/blog/configuration-with-viper-in-go)
-- [Test with Testify and Mockery in Go](https://outcomeschool.com/blog/test-with-testify-and-mockery-in-go)
-- [Database Normalization vs Denormalization](https://outcomeschool.com/blog/database-normalization-vs-denormalization)
-
-## Architecture Layers of the project
-
-- Router
-- Controller
-- Usecase
-- Repository
-- Domain
-
-![Go Backend Clean Architecture Diagram](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-backend-arch-diagram.png?raw=true)
-
-## About me
-
-Hi, I am Amit Shekhar, Co-Founder @ [Outcome School](https://outcomeschool.com) • IIT 2010-14 • I have taught and mentored many developers, and their efforts landed them high-paying tech jobs, helped many tech companies in solving their unique problems, and created many open-source libraries being used by top companies. I am passionate about sharing knowledge through open-source, blogs, and videos.
-
-You can connect with me on:
-
-- [Twitter](https://twitter.com/amitiitbhu)
-- [YouTube](https://www.youtube.com/@amitshekhar)
-- [LinkedIn](https://www.linkedin.com/in/amit-shekhar-iitbhu)
-- [GitHub](https://github.com/amitshekhariitbhu)
-
-## System Design Playlist on YouTube
-
-- [What is System Design?](https://www.youtube.com/watch?v=i4YWRY3hsdA)
-- [Twitter Timeline Design with Fanout Approach - System Design](https://www.youtube.com/watch?v=_7qHGfwgPz0)
-- [HTTP Request vs HTTP Long-Polling vs WebSocket vs Server-Sent Events](https://www.youtube.com/watch?v=8ksWRX4xV-s)
-- [YouTube Video Upload Service - System Design](https://www.youtube.com/watch?v=N0vvJTkokZc)
-- [What is Consistent Hashing?](https://www.youtube.com/watch?v=dV5cIm9T3ss)
-- [Capacity Estimation: Back-of-the-envelope calculation - Twitter](https://www.youtube.com/watch?v=yrbKxzXm6_Q)
-
-## Major Packages used in this project
-
-- **gin**: Gin is an HTTP web framework written in Go (Golang). It features a Martini-like API with much better performance -- up to 40 times faster. If you need a smashing performance, get yourself some Gin.
-- **mongo go driver**: The Official Golang driver for MongoDB.
-- **jwt**: JSON Web Tokens are an open, industry-standard RFC 7519 method for representing claims securely between two parties. Used for Access Token and Refresh Token.
-- **viper**: For loading configuration from the `.env` file. Go configuration with fangs. Find, load, and unmarshal a configuration file in JSON, TOML, YAML, HCL, INI, envfile, or Java properties formats.
-- **bcrypt**: Package bcrypt implements Provos and Mazières's bcrypt adaptive hashing algorithm.
-- **testify**: A toolkit with common assertions and mocks that plays nicely with the standard library.
-- **mockery**: A mock code autogenerator for Golang used in testing.
-- Check more packages in `go.mod`.
-
-### Public API Request Flow without JWT Authentication Middleware
-
-![Public API Request Flow](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-arch-public-api-request-flow.png?raw=true)
-
-### Private API Request Flow with JWT Authentication Middleware
-
-> JWT Authentication Middleware for Access Token Validation.
-
-![Private API Request Flow](https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/go-arch-private-api-request-flow.png?raw=true)
-
-### How to run this project?
-
-We can run this Go Backend Clean Architecture project with or without Docker. Here, I am providing both ways to run this project.
-
-- Clone this project
+_Mac (using [homebrew](http://brew.sh/)):_
 
 ```bash
-# Move to your workspace
-cd your-workspace
-
-# Clone this project into your workspace
-git clone https://github.com/amitshekhariitbhu/go-backend-clean-architecture.git
-
-# Move to the project root directory
-cd go-backend-clean-architecture
+brew install redis
 ```
 
-#### Run without Docker
-
-- Create a file `.env` similar to `.env.example` at the root directory with your configuration.
-- Install `go` if not installed on your machine.
-- Install `MongoDB` if not installed on your machine.
-- Important: Change the `DB_HOST` to `localhost` (`DB_HOST=localhost`) in `.env` configuration file. `DB_HOST=mongodb` is needed only when you run with Docker.
-- Run `go run cmd/main.go`.
-- Access API using `http://localhost:8080`
-
-#### Run with Docker
-
-- Create a file `.env` similar to `.env.example` at the root directory with your configuration.
-- Install Docker and Docker Compose.
-- Run `docker-compose up -d`.
-- Access API using `http://localhost:8080`
-
-### How to run the test?
+_Linux:_
 
 ```bash
-# Run all tests
-go test ./...
+sudo apt-get install redis-server
 ```
 
-### How to generate the mock code?
+### Setup
 
-In this project, to test, we need to generate mock code for the use-case, repository, and database.
+You can install Node modules using either [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/), which are both package managers for Node.js.
 
 ```bash
-# Generate mock code for the usecase and repository
-mockery --dir=domain --output=domain/mocks --outpkg=mocks --all
-
-# Generate mock code for the database
-mockery --dir=mongo --output=mongo/mocks --outpkg=mocks --all
+yarn install # or npm install
 ```
 
-Whenever you make changes in the interfaces of these use-cases, repositories, or databases, you need to run the corresponding command to regenerate the mock code for testing.
+COPY .env.example to .env
 
-### The Complete Project Folder Structure
-
+```bash
+cp .env.example .env
 ```
+
+### API Start
+
+```bash
+yarn start # or npm start
+yarn watch # or npm run watch - watch mode
+yarn build # or npm run build - production build
+```
+
+### ESlint Start
+
+```bash
+yarn lint # or npm run link
+yarn lint:write # or npm run lint:write - with prefix --fix
+```
+
+### Prettier Start
+
+```bash
+yarn prettier # or npm run prettier
+yarn prettier:write # or npm run prettier:write - with prefix --fix
+```
+
+## API Endpoints
+
+- POST: <http://localhost:8000/auth/sign-in> Sign In
+- POST: <http://localhost:8000/auth/sign-up> Sign Up
+- GET: <http://localhost:8000/auth/sign-out> Sign Out
+- POST: <http://localhost:8000/auth/password/reset> Reset Password
+- POST: <http://localhost:8000/auth/password/new/:accessToken> New Password By Reset
+- GET: <http://localhost:8000/me> Get User
+- POST: <http://localhost:8000/user/verification/request> Verification Request
+- GET: <http://localhost:8000/user/verification/:accessToken> Verify
+- POST: <http://localhost:8000/user/update> Update User
+- POST: <http://localhost:8000/user/update/email> Update Email
+- POST: <http://localhost:8000/user/update/password> Update Password
+- POST: <http://localhost:8000/user/update/avatar> Update Avatar
+- POST: <http://localhost:8000/user/delete> Delete Profile
+- POST: <http://localhost:8000/media/image/upload> Image upload
+
+### Mailcatcher
+
+If you're looking for an easy-to-use tool to test your email SMTP functionality, I highly recommend using [Mailcatcher](https://mailcatcher.me/). Mailcatcher is a simple SMTP server that catches all your outgoing emails and displays them in a web interface for easy viewing.
+
+### To install [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) in [Visual Studio Code](https://code.visualstudio.com/), you can follow these steps:
+
+- Open Visual Studio Code and navigate to your project folder.
+- Press Ctrl + Shift + P (Windows) or Cmd + Shift + P (Mac) to open the Command Palette.
+- Type "Extensions: Install Extensions" and select the first option that appears.
+- In the search bar, type "Prettier" and select the first result that appears.
+- Click the "Install" button to install Prettier.
+- Repeat step 4 and 5 to install ESLint.
+
+### API Structure
+
+```bash
 .
-├── Dockerfile
-├── api
-│   ├── controller
-│   │   ├── login_controller.go
-│   │   ├── profile_controller.go
-│   │   ├── profile_controller_test.go
-│   │   ├── refresh_token_controller.go
-│   │   ├── signup_controller.go
-│   │   └── task_controller.go
-│   ├── middleware
-│   │   └── jwt_auth_middleware.go
-│   └── route
-│       ├── login_route.go
-│       ├── profile_route.go
-│       ├── refresh_token_route.go
-│       ├── route.go
-│       ├── signup_route.go
-│       └── task_route.go
-├── bootstrap
-│   ├── app.go
-│   ├── database.go
-│   └── env.go
-├── cmd
-│   └── main.go
-├── docker-compose.yaml
-├── domain
-│   ├── error_response.go
-│   ├── jwt_custom.go
-│   ├── login.go
-│   ├── profile.go
-│   ├── refresh_token.go
-│   ├── signup.go
-│   ├── success_response.go
-│   ├── task.go
-│   └── user.go
-├── go.mod
-├── go.sum
-├── internal
-│   └── tokenutil
-│       └── tokenutil.go
-├── mongo
-│   └── mongo.go
-├── repository
-│   ├── task_repository.go
-│   ├── user_repository.go
-│   └── user_repository_test.go
-└── usecase
-    ├── login_usecase.go
-    ├── profile_usecase.go
-    ├── refresh_token_usecase.go
-    ├── signup_usecase.go
-    ├── task_usecase.go
-    └── task_usecase_test.go
+├── src
+│  ├── @types
+│  │  └── global.d.ts
+│  ├── constants
+│  │  └── index.ts
+│  ├── contracts
+│  │  ├── auth.ts
+│  │  ├── jwt.ts
+│  │  ├── media.ts
+│  │  ├── request.ts
+│  │  └── user.ts
+│  ├── controllers
+│  │  ├── authController.ts
+│  │  ├── index.ts
+│  │  ├── mediaController.ts
+│  │  └── userController.ts
+│  ├── dataSources
+│  │  ├── index.ts
+│  │  ├── mongoose.ts
+│  │  └── redis.ts
+│  ├── guards
+│  │  ├── authGuard.ts
+│  │  └── index.ts
+│  ├── i18n
+│  │  ├── index.ts
+│  │  └── translations
+│  │     ├── en.json
+│  │     └── ka.json
+│  ├── index.ts
+│  ├── infrastructure
+│  │  ├── image.ts
+│  │  ├── logger.ts
+│  │  └── upload.ts
+│  ├── mailer
+│  │  ├── index.ts
+│  │  ├── mailer.ts
+│  │  └── userMail.ts
+│  ├── middlewares
+│  │  ├── authMiddleware.ts
+│  │  ├── corsMiddleware.ts
+│  │  ├── index.ts
+│  │  ├── notFoundMiddleware.ts
+│  │  └── uploadSingleImageMiddleware.ts
+│  ├── models
+│  │  ├── index.ts
+│  │  ├── media.ts
+│  │  ├── resetPassword.ts
+│  │  ├── user.ts
+│  │  └── verification.ts
+│  ├── routes
+│  │  ├── auth.ts
+│  │  ├── index.ts
+│  │  ├── media.ts
+│  │  └── users.ts
+│  ├── services
+│  │  ├── index.ts
+│  │  ├── mediaService.ts
+│  │  ├── resetPasswordService.ts
+│  │  ├── userService.ts
+│  │  └── verificationService.ts
+│  ├── storage
+│  │  └── public
+│  ├── templates
+│  │  ├── resetPassword
+│  │  │  └── html.ejs
+│  │  ├── signUp
+│  │  │  └── html.ejs
+│  │  ├── successfullyDeleted
+│  │  │  └── html.ejs
+│  │  ├── successfullyUpdatedEmail
+│  │  │  └── html.ejs
+│  │  ├── successfullyUpdatedPassword
+│  │  │  └── html.ejs
+│  │  ├── successfullyUpdatedProfile
+│  │  │  └── html.ejs
+│  │  ├── successfullyVerified
+│  │  │  └── html.ejs
+│  │  └── verification
+│  │     └── html.ejs
+│  ├── utils
+│  │  ├── cryptoString.ts
+│  │  ├── dates.ts
+│  │  ├── hash.ts
+│  │  ├── headers.ts
+│  │  ├── jwt.ts
+│  │  ├── maths.ts
+│  │  └── paths.ts
+│  └── validations
+│     ├── authValidation.ts
+│     ├── index.ts
+│     └── userValidation.ts
+├── .env
+├── .env.example
+├── .eslintrc
+├── .gitignore
+├── .nvmrc
+├── .prettierrc
+├── api-logs.log
+├── LICENSE
+├── package.json
+├── README.md
+├── tsconfig.json
+└── yarn.lock
 ```
 
-### API documentation of Go Backend Clean Architecture
+**Note:** For any question [issues](https://github.com/watscho/express-mongodb-rest-api-boilerplate/issues)
 
-<a href="https://documenter.getpostman.com/view/391588/2s8Z75S9xy" target="_blank">
-    <img alt="View API Doc Button" src="https://github.com/amitshekhariitbhu/go-backend-clean-architecture/blob/main/assets/button-view-api-docs.png?raw=true" width="200" height="60"/>
-</a>
+## License
 
-### Example API Request and Response
-
-- signup
-
-  - Request
-
-  ```
-  curl --location --request POST 'http://localhost:8080/signup' \
-  --data-urlencode 'email=test@gmail.com' \
-  --data-urlencode 'password=test' \
-  --data-urlencode 'name=Test Name'
-  ```
-
-  - Response
-
-  ```json
-  {
-    "accessToken": "access_token",
-    "refreshToken": "refresh_token"
-  }
-  ```
-
-- login
-
-  - Request
-
-  ```
-  curl --location --request POST 'http://localhost:8080/login' \
-  --data-urlencode 'email=test@gmail.com' \
-  --data-urlencode 'password=test'
-  ```
-
-  - Response
-
-  ```json
-  {
-    "accessToken": "access_token",
-    "refreshToken": "refresh_token"
-  }
-  ```
-
-- profile
-
-  - Request
-
-  ```
-  curl --location --request GET 'http://localhost:8080/profile' \
-  --header 'Authorization: Bearer access_token'
-  ```
-
-  - Response
-
-  ```json
-  {
-    "name": "Test Name",
-    "email": "test@gmail.com"
-  }
-  ```
-
-- task create
-
-  - Request
-
-  ```
-  curl --location --request POST 'http://localhost:8080/task' \
-  --header 'Authorization: Bearer access_token' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'title=Test Task'
-  ```
-
-  - Response
-
-  ```json
-  {
-    "message": "Task created successfully"
-  }
-  ```
-
-- task fetch
-
-  - Request
-
-  ```
-  curl --location --request GET 'http://localhost:8080/task' \
-  --header 'Authorization: Bearer access_token'
-  ```
-
-  - Response
-
-  ```json
-  [
-    {
-      "title": "Test Task"
-    },
-    {
-      "title": "Test Another Task"
-    }
-  ]
-  ```
-
-- refresh token
-
-  - Request
-
-  ```
-  curl --location --request POST 'http://localhost:8080/refresh' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'refreshToken=refresh_token'
-  ```
-
-  - Response
-
-  ```json
-  {
-    "accessToken": "access_token",
-    "refreshToken": "refresh_token"
-  }
-  ```
-
-### TODO
-
-- Improvement based on feedback.
-- Add more test cases.
-- Always try to update with the latest version of the packages used.
-
-## If this project helps you in anyway, show your love ❤️ by putting a ⭐ on this project ✌️
-
-### License
-
-```
-   Copyright (C) 2024 Amit Shekhar
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-```
-
-### Contributing to Go Backend Clean Architecture
-
-All pull requests are welcome.
+This project is an open-source with an [MIT License](https://github.com/watscho/express-mongodb-rest-api-boilerplate/blob/master/LICENSE)

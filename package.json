@@ -9,6 +9,6 @@
   "scripts": {
     "dev": "concurrently \"npm run dev-frontend\" \"npm run dev-backend\"",
     "dev-frontend": "cd frontend && npm run dev",
-    "dev-backend": "cd backend && go run cmd/main.go"
+    "dev-backend": "cd backend && yarn watch"
   }
 }
