@@ -17,6 +17,8 @@ export const authValidation = {
     res: Response,
     next: NextFunction
   ) => {
+    console.log('Mingggg')
+
     try {
       if (!req.body.email || !req.body.password) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -63,6 +65,7 @@ export const authValidation = {
       if (
         !req.body.email ||
         !req.body.password ||
+        !req.body.username ||
         !validator.isLength(req.body.password, { min: 6, max: 48 })
       ) {
         return res.status(StatusCodes.BAD_REQUEST).json({

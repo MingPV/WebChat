@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Router } from 'express'
 
 import { authController } from '@/controllers'
 import { authGuard } from '@/guards'

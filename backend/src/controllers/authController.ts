@@ -46,6 +46,13 @@ export const authController = {
 
       const { accessToken } = jwtSign(user.id)
 
+      // Set the access token as a cookie in the response
+      res.cookie('access_token', accessToken, {
+        httpOnly: true, // To prevent access from JavaScript
+        secure: false, // Only send cookies over HTTPS in production
+        expires: new Date(Date.now() + 3600 * 1000) // Set expiry (1 hour here)
+      })
+
       return res.status(StatusCodes.OK).json({
         data: { accessToken },
         message: ReasonPhrases.OK,
@@ -62,7 +69,7 @@ export const authController = {
   },
 
   signUp: async (
-    { body: { email, password } }: IBodyRequest<SignUpPayload>,
+    { body: { email, password, username } }: IBodyRequest<SignUpPayload>,
     res: Response
   ) => {
     const session = await startSession()
@@ -79,10 +86,14 @@ export const authController = {
       session.startTransaction()
       const hashedPassword = await createHash(password)
 
+      console.log('ming2')
+      console.log(username)
+
       const user = await userService.create(
         {
           email,
-          password: hashedPassword
+          password: hashedPassword,
+          username: username
         },
         session
       )
@@ -157,9 +168,16 @@ export const authController = {
     res: Response
   ) => {
     try {
-      await redis.client.set(`expiredToken:${accessToken}`, `${user.id}`, {
-        EX: process.env.REDIS_TOKEN_EXPIRATION,
-        NX: true
+      // await redis.client.set(`expiredToken:${accessToken}`, `${user.id}`, {
+      //   EX: process.env.REDIS_TOKEN_EXPIRATION,
+      //   NX: true
+      // })
+
+      // set cookie token
+      res.cookie('access_token', '', {
+        httpOnly: true,
+        secure: false,
+        expires: new Date(Date.now() - 1)
       })
 
       return res.status(StatusCodes.OK).json({

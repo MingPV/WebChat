@@ -24,6 +24,8 @@ export const authGuard = {
     res: Response,
     next: NextFunction
   ) => {
+    console.log(user)
+
     if (!user) {
       return next()
     }

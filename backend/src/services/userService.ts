@@ -7,10 +7,12 @@ export const userService = {
     {
       email,
       password,
+      username,
       verified = false
     }: {
       email: string
       password: string
+      username: string
       verified?: boolean
     },
     session?: ClientSession
@@ -18,14 +20,16 @@ export const userService = {
     new User({
       email,
       password,
+      username,
       verified
     }).save({ session }),
-
   getById: (userId: ObjectId) => User.findById(userId),
 
   getByEmail: (email: string) => User.findOne({ email }),
 
   isExistByEmail: (email: string) => User.exists({ email }),
+
+  isExistByUsername: (username: string) => User.exists({ username }),
 
   updatePasswordByUserId: (
     userId: ObjectId,
