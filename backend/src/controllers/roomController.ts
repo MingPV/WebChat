@@ -16,6 +16,9 @@ export const roomController = {
       })
     }
 
+    console.log('req.body')
+    console.log(req.body)
+
     try {
       if (isGroup) {
         const existingGroupIdentifier =

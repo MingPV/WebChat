@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ChatCard from "../components/chatCard";
 import { Room } from "@/types/room";
+import CreateGroup from "../components/groupCreate";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
@@ -264,6 +265,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <div>{userData ? <CreateGroup myData={userData} /> : null}</div>
       </div>
     </main>
   );
