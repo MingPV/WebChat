@@ -9,7 +9,9 @@ export const roomService = {
       groupId,
       isGroup,
       participants,
-      createdBy
+      createdBy,
+      lastMessage,
+      lastMessageDate
     }: {
       roomId: string
       name?: string
@@ -17,6 +19,8 @@ export const roomService = {
       isGroup: boolean
       participants: ObjectId[]
       createdBy: ObjectId
+      lastMessage?: string
+      lastMessageDate: Date
     },
     session?: ClientSession
   ) =>
@@ -26,11 +30,13 @@ export const roomService = {
       groupId,
       isGroup,
       participants,
-      createdBy
+      createdBy,
+      lastMessage,
+      lastMessageDate
     }).save({ session }),
   getById: (roomId: ObjectId) => Room.findById(roomId),
   getByRoomId: (roomId: string) => Room.findOne({ roomId }),
-  getAllRoomsByUserId: (userId: ObjectId) =>
+  getAllRoomsByUserId: (userId: string) =>
     Room.find({ participants: userId }).populate('participants'),
   updateByRoomId: (
     roomId: string,

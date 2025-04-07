@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { friendService } from '@/services/friendService'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
+import { roomService } from '@/services'
 
 export const friendController = {
   createFriend: async (req: Request, res: Response) => {
@@ -158,8 +159,25 @@ export const friendController = {
         undefined // No session in this case
       )
 
+      const roomId = [user_id, friend_id].sort().join('-')
+
+      // Create the room
+      const room = await roomService.create(
+        {
+          roomId,
+          name: `Chat room between ${user_id} and ${friend_id}`,
+          isGroup: false,
+          participants: [user_id, friend_id],
+          createdBy: user_id,
+          lastMessageDate: new Date()
+        },
+        undefined // No session in this case
+      )
+
+      console.log(room)
+
       return res.status(StatusCodes.OK).json({
-        data: updatedFriend,
+        data: { updatedFriend, room },
         message: ReasonPhrases.OK,
         status: StatusCodes.OK
       })

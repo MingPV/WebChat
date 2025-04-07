@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
-import { DarkThemeToggle } from "flowbite-react";
 import { Message } from "@/types/message";
+import { Room } from "@/types/room";
+import { User } from "@/types/user";
+import React, { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
+
+type Props = { room: Room; myData: User };
 
 let socket: Socket;
 
-export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
+export default function ChatCard({ room, myData }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,20 +20,23 @@ export default function Home() {
     // Initialize socket connection
     socket = io("http://localhost:8080"); // Replace with your server URL
 
-    socket.emit("join_room", "publicChat");
+    socket.emit("join_room", room.roomId);
+    console.log(room);
 
     // Listen for incoming messages
-    socket.on("receive_message", ({ message, sender, createdAt }) => {
+    socket.on("receive_message", ({ _id, message, sender, createdAt }) => {
       console.log("got message");
       const newMessage: Message = {
-        _id: "message.id",
-        roomId: "message.roomId",
+        _id: _id,
+        roomId: room._id,
         sender: sender,
         message: message,
         createdAt: createdAt,
       };
 
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      console.log("newMessage ", newMessage);
+
+      setMessages((prevMessages) => [...(prevMessages || []), newMessage]);
     });
 
     const fetchMessagesByRoomId = async (roomId: string) => {
@@ -47,6 +54,7 @@ export default function Home() {
           throw new Error("Failed to fetch messages");
         }
         const data = await response.json();
+
         console.log("Fetched messages:", data);
         setMessages(data.data); // Assuming the messages are in data.data
       } catch (error) {
@@ -56,7 +64,7 @@ export default function Home() {
       }
     };
 
-    fetchMessagesByRoomId("กลุ่มเพื่อนปี 34-67f2c99737dfc9a82d5d13b5");
+    fetchMessagesByRoomId(room.roomId);
 
     setIsLoading(false);
 
@@ -100,20 +108,23 @@ export default function Home() {
     if (input.trim() === "") return;
 
     const sentMessage = await createMessageByRoomId(
-      "publicChat",
+      room.roomId,
       message,
-      "67f2811591bc62ef817ffb06",
+      myData._id,
     );
 
-    console.log("Sent message:", sentMessage);
+    console.log("Sent message:", sentMessage._id);
 
     // Emit the message to the server
     socket.emit("send_message", {
-      roomId: "publicChat",
+      _id: sentMessage._id,
+      roomId: room.roomId,
       message: sentMessage.message,
       sender: sentMessage.sender,
       createdAt: sentMessage.createdAt,
     });
+
+    console.log(messages);
     // setMessages((prevMessages) => [...prevMessages, sentMessage]);
   };
 
@@ -122,50 +133,44 @@ export default function Home() {
     setInput("");
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <div>Loading</div>
-      </>
-    );
-  }
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-24 dark:bg-gray-900">
-      <div className="absolute top-4 right-4">
-        <DarkThemeToggle />
-      </div>
-
-      <div className="w-full max-w-md">
-        <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
-          Room: {"PulbicChat"}
-        </h1>
-        <div className="mb-4 h-64 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-          {messages.map((message, index) => (
+    <>
+      <div key={room._id} className="flex flex-row gap-2 border-b p-2">
+        <div className="flex flex-row">
+          <div>
+            <div>{room.name}</div>
             <div
-              key={index}
-              className="mb-2 text-sm text-gray-900 dark:text-white"
+              className="cursor-pointer rounded-md bg-sky-300 p-2"
+              onClick={() => setIsOpen(!isOpen)}
             >
-              {message.message}
+              Chat
             </div>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Type your message..."
-          />
-          <button
-            onClick={handleSendMessage}
-            className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Send
-          </button>
+          </div>
+          <div className="m-6">
+            {isOpen && (
+              <div className="flex flex-col gap-2">
+                {isLoading ? (
+                  <div>Loading...</div>
+                ) : (
+                  messages?.map((message) => (
+                    <div key={message._id} className="border-b p-2">
+                      <div>sender : {message.sender}</div>
+                      <div>{message.message}</div>
+                    </div>
+                  ))
+                )}
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type a message"
+                />
+                <button onClick={handleSendMessage}>Send</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </main>
+    </>
   );
 }

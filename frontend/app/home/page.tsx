@@ -5,11 +5,14 @@ import { User } from "@/types/user";
 import { DarkThemeToggle } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ChatCard from "../components/chatCard";
+import { Room } from "@/types/room";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
   const [friendName, setFriendName] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [rooms, setRooms] = useState<Room[]>();
 
   const router = useRouter();
 
@@ -40,6 +43,21 @@ export default function Home() {
         const { data: data2 } = await response2.json();
         console.log(data2);
 
+        const response3 = await fetch(
+          `http://localhost:8080/rooms/userId/${data._id}`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        if (!response3.ok) {
+          console.log(response3);
+          throw new Error("Failed to fetch rooms");
+        }
+        const { data: data3 } = await response3.json();
+        console.log(data3);
+
+        setRooms(data3);
         setFriends(data2);
         setUserData(data);
       } catch (error) {
@@ -208,20 +226,13 @@ export default function Home() {
               ),
           )}
           <div>Friends</div>
-          {friends.map(
-            (friend) =>
-              friend.is_accepted && (
-                <div
-                  key={friend._id}
-                  className="flex flex-row gap-2 border-b p-2"
-                >
-                  <div>{friend.friend_name}</div>
-                  <div className="cursor-pointer rounded-md bg-sky-300 p-2">
-                    Chat
-                  </div>
-                </div>
-              ),
-          )}
+          {rooms
+            ? rooms.map((room) =>
+                userData ? (
+                  <ChatCard key={room._id} room={room} myData={userData} />
+                ) : null,
+              )
+            : null}
         </div>
         <div className="flex w-full flex-col justify-center">
           <div className="m-2">Add friend by username</div>

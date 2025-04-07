@@ -13,7 +13,6 @@ const schema = new Schema(
     },
     groupId: {
       type: Schema.Types.ObjectId,
-      ref: 'Group',
       required: false
     },
     isGroup: {
@@ -30,6 +29,14 @@ const schema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
+    },
+    lastMessage: {
+      type: String,
+      required: false
+    },
+    lastMessageDate: {
+      type: Date,
+      required: false
     }
   },
   { timestamps: true }

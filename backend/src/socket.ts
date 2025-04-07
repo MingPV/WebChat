@@ -19,10 +19,10 @@ export const initSocket = (server: HttpServer) => {
       console.log(`Socket ${socket.id} joined room ${roomId}`)
     })
 
-    socket.on('send_message', ({ roomId, message, sender, createdAt }) => {
+    socket.on('send_message', message => {
       console.log('send toooo')
-      console.log(roomId)
-      io.to(roomId).emit('receive_message', { message, sender, createdAt })
+      console.log(message.roomId)
+      io.to(message.roomId).emit('receive_message', message)
     })
 
     socket.on('disconnect', () => {

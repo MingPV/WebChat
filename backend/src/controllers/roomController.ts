@@ -32,7 +32,15 @@ export const roomController = {
         const roomId = `${name}-${groupId}`
         // Create the room
         const room = await roomService.create(
-          { roomId, name, groupId, isGroup, participants, createdBy },
+          {
+            roomId,
+            name,
+            groupId,
+            isGroup,
+            participants,
+            createdBy,
+            lastMessageDate: new Date()
+          },
           undefined // No session in this case
         )
 
@@ -47,7 +55,14 @@ export const roomController = {
 
       // Create the room
       const room = await roomService.create(
-        { roomId, name, isGroup, participants, createdBy },
+        {
+          roomId,
+          name,
+          isGroup,
+          participants,
+          createdBy,
+          lastMessageDate: new Date()
+        },
         undefined // No session in this case
       )
 
@@ -58,6 +73,25 @@ export const roomController = {
       })
     } catch (error) {
       console.error('Error creating room:', error)
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        status: StatusCodes.INTERNAL_SERVER_ERROR
+      })
+    }
+  },
+  getAllRoomByUserId: async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+      const rooms = await roomService.getAllRoomsByUserId(id)
+
+      return res.status(StatusCodes.OK).json({
+        data: rooms,
+        message: ReasonPhrases.OK,
+        status: StatusCodes.OK
+      })
+    } catch (error) {
+      console.error('Error fetching rooms:', error)
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: ReasonPhrases.INTERNAL_SERVER_ERROR,
         status: StatusCodes.INTERNAL_SERVER_ERROR
