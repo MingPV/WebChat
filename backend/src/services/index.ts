@@ -1,4 +1,7 @@
 export { userService } from './userService'
+export { roomService } from './roomService'
 export { resetPasswordService } from './resetPasswordService'
 export { verificationService } from './verificationService'
 export { mediaService } from './mediaService'
+export { friendService } from './friendService'
+export { messageService } from './messageService'

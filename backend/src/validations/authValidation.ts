@@ -17,8 +17,6 @@ export const authValidation = {
     res: Response,
     next: NextFunction
   ) => {
-    console.log('Mingggg')
-
     try {
       if (!req.body.email || !req.body.password) {
         return res.status(StatusCodes.BAD_REQUEST).json({

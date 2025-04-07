@@ -27,6 +27,8 @@ export const userService = {
 
   getByEmail: (email: string) => User.findOne({ email }),
 
+  getByUsername: (username: string) => User.findOne({ username }),
+
   isExistByEmail: (email: string) => User.exists({ email }),
 
   isExistByUsername: (username: string) => User.exists({ username }),

@@ -1,3 +1,6 @@
 export { authController } from './authController'
 export { userController } from './userController'
 export { mediaController } from './mediaController'
+export { groupIdentifierController } from './groupIdentifierController'
+export { roomController } from './roomController'
+export { messageController } from './messageController'

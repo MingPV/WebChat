@@ -75,8 +75,9 @@ export const authController = {
     const session = await startSession()
     try {
       const isUserExist = await userService.isExistByEmail(email)
+      const isUsernameExist = await userService.isExistByUsername(username)
 
-      if (isUserExist) {
+      if (isUserExist || isUsernameExist) {
         return res.status(StatusCodes.CONFLICT).json({
           message: ReasonPhrases.CONFLICT,
           status: StatusCodes.CONFLICT

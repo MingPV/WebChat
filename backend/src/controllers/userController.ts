@@ -36,7 +36,6 @@ export const userController = {
     { context: { user } }: IContextRequest<IUserRequest>,
     res: Response
   ) => {
-    console.log('ming')
     if (!user) {
       return res.status(StatusCodes.NOT_FOUND).json({
         message: ReasonPhrases.NOT_FOUND,
@@ -59,6 +58,38 @@ export const userController = {
       message: ReasonPhrases.OK,
       status: StatusCodes.OK
     })
+  },
+
+  // get user by username
+  getByUsername: async (
+    { params }: IParamsRequest<{ username: string }>,
+    res: Response
+  ) => {
+    try {
+      const user = await userService.getByUsername(params.username)
+
+      console.log('ming23', params.username)
+
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: ReasonPhrases.NOT_FOUND,
+          status: StatusCodes.NOT_FOUND
+        })
+      }
+
+      return res.status(StatusCodes.OK).json({
+        data: { ...user.toJSON() },
+        message: ReasonPhrases.OK,
+        status: StatusCodes.OK
+      })
+    } catch (error) {
+      winston.error(error)
+
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: ReasonPhrases.BAD_REQUEST,
+        status: StatusCodes.BAD_REQUEST
+      })
+    }
   },
 
   verificationRequest: async (
