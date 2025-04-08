@@ -7,7 +7,7 @@ import { redis } from '@/dataSources'
 
 export const authMiddleware = async (
   req: Request,
-  _: Response,
+  res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
@@ -20,6 +20,8 @@ export const authMiddleware = async (
 
     const { id } = jwtVerify({ accessToken })
     if (!id) return next()
+
+    // redirect to sign-in page if no token
 
     // implement later
 

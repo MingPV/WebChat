@@ -10,8 +10,9 @@ import ChatCard from "../components/chatCard";
 import { Room } from "@/types/room";
 import CreateGroup from "../components/groupCreate";
 import { useSocket } from "../contexts/SocketContext";
+// import { withAuth } from "@/utils/withAuth";
 
-export default function Home() {
+function HomePage() {
   const [userData, setUserData] = useState<User>();
   const [friendName, setFriendName] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -298,3 +299,6 @@ export default function Home() {
     </main>
   );
 }
+
+// export default withAuth(HomePage);
+export default HomePage;

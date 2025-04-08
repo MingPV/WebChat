@@ -50,7 +50,7 @@ export const authController = {
       res.cookie('access_token', accessToken, {
         httpOnly: true, // To prevent access from JavaScript
         secure: false, // Only send cookies over HTTPS in production
-        expires: new Date(Date.now() + 3600 * 1000) // Set expiry (1 hour here)
+        expires: new Date(Date.now() + 3600 * 24000) // Set expiry (24 hour here)
       })
 
       return res.status(StatusCodes.OK).json({

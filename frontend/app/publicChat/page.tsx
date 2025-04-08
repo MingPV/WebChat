@@ -93,7 +93,8 @@ export default function Home() {
             credentials: "include",
           });
           if (!response.ok) {
-            throw new Error("Failed to fetch user data");
+            console.log("no user logged in");
+            return;
           }
           const data = await response.json();
           console.log("Fetched user data:", data);
@@ -108,6 +109,7 @@ export default function Home() {
           );
         }
       };
+
       fetchUserData();
       fetchMessagesByRoomId("PublicRoom");
       setIsLoading(false);
