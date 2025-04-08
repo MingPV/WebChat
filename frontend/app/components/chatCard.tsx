@@ -4,24 +4,34 @@ import { Message } from "@/types/message";
 import { Room } from "@/types/room";
 import { User } from "@/types/user";
 import React, { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { useSocket } from "../contexts/SocketContext";
 
 type Props = { room: Room; myData: User };
 
-let socket: Socket;
-
 export default function ChatCard({ room, myData }: Props) {
+  const { socket } = useSocket();
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isJoined, setIsJoined] = useState(false);
 
   useEffect(() => {
     // Initialize socket connection
-    socket = io("http://localhost:8080"); // Replace with your server URL
 
-    socket.emit("join_room", room.roomId);
+    if (!socket) {
+      console.log("mingza");
+      return;
+    }
+
+    if (!isJoined) {
+      socket.emit("join_room", room.roomId);
+      setIsJoined(true);
+    }
+
     console.log(room);
+    console.log("ming");
 
     // Listen for incoming messages
     socket.on("receive_message", ({ _id, message, sender, createdAt }) => {
@@ -67,11 +77,6 @@ export default function ChatCard({ room, myData }: Props) {
     fetchMessagesByRoomId(room.roomId);
 
     setIsLoading(false);
-
-    // Cleanup on component unmount
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   const createMessageByRoomId = async (
@@ -115,14 +120,18 @@ export default function ChatCard({ room, myData }: Props) {
 
     console.log("Sent message:", sentMessage._id);
 
-    // Emit the message to the server
-    socket.emit("send_message", {
-      _id: sentMessage._id,
-      roomId: room.roomId,
-      message: sentMessage.message,
-      sender: sentMessage.sender,
-      createdAt: sentMessage.createdAt,
-    });
+    if (socket) {
+      // Emit the message to the server
+      console.log("mingza2");
+      console.log(socket);
+      socket.emit("send_message", {
+        _id: sentMessage._id,
+        roomId: room.roomId,
+        message: sentMessage.message,
+        sender: sentMessage.sender,
+        createdAt: sentMessage.createdAt,
+      });
+    }
 
     console.log(messages);
     // setMessages((prevMessages) => [...prevMessages, sentMessage]);
