@@ -75,11 +75,13 @@ export const messageService = {
     {
       roomId,
       sender,
+      senderName,
       message,
       sentAt
     }: {
       roomId: string
       sender: ObjectId
+      senderName: string
       message: string
       sentAt: Date
     },
@@ -88,6 +90,7 @@ export const messageService = {
     new Message({
       roomId,
       sender,
+      senderName,
       message,
       sentAt
     }).save({ session }),

@@ -34,20 +34,24 @@ export default function ChatCard({ room, myData }: Props) {
     console.log("ming");
 
     // Listen for incoming messages
-    socket.on("receive_message", ({ _id, message, sender, createdAt }) => {
-      console.log("got message");
-      const newMessage: Message = {
-        _id: _id,
-        roomId: room._id,
-        sender: sender,
-        message: message,
-        createdAt: createdAt,
-      };
+    socket.on(
+      "receive_message",
+      ({ _id, message, sender, senderName, createdAt }) => {
+        console.log("got message");
+        const newMessage: Message = {
+          _id: _id,
+          roomId: room._id,
+          sender: sender,
+          senderName: senderName,
+          message: message,
+          createdAt: createdAt,
+        };
 
-      console.log("newMessage ", newMessage);
+        console.log("newMessage ", newMessage);
 
-      setMessages((prevMessages) => [...(prevMessages || []), newMessage]);
-    });
+        setMessages((prevMessages) => [...(prevMessages || []), newMessage]);
+      },
+    );
 
     const fetchMessagesByRoomId = async (roomId: string) => {
       try {
@@ -77,12 +81,13 @@ export default function ChatCard({ room, myData }: Props) {
     fetchMessagesByRoomId(room.roomId);
 
     setIsLoading(false);
-  }, []);
+  }, [socket]);
 
   const createMessageByRoomId = async (
     roomId: string,
     message: string,
     senderId: string,
+    senderName: string,
   ) => {
     try {
       const response = await fetch(`http://localhost:8080/messages`, {
@@ -93,6 +98,7 @@ export default function ChatCard({ room, myData }: Props) {
         body: JSON.stringify({
           roomId: roomId,
           senderId: senderId,
+          senderName: senderName,
           content: message,
         }),
       });
@@ -116,6 +122,7 @@ export default function ChatCard({ room, myData }: Props) {
       room.roomId,
       message,
       myData._id,
+      myData.username,
     );
 
     console.log("Sent message:", sentMessage._id);
@@ -129,6 +136,7 @@ export default function ChatCard({ room, myData }: Props) {
         roomId: room.roomId,
         message: sentMessage.message,
         sender: sentMessage.sender,
+        senderName: sentMessage.senderName,
         createdAt: sentMessage.createdAt,
       });
     }

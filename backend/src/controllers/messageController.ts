@@ -44,10 +44,10 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
 export const messageController = {
   createMessage: async (req: Request, res: Response) => {
-    const { roomId, senderId, content } = req.body
+    const { roomId, senderId, content, senderName } = req.body
 
     // Validate required fields
-    if (!roomId || !senderId || !content) {
+    if (!roomId || !content) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'Missing required fields',
         status: StatusCodes.BAD_REQUEST
@@ -57,7 +57,13 @@ export const messageController = {
     try {
       // Create the message
       const message = await messageService.create(
-        { roomId, sender: senderId, message: content, sentAt: new Date() },
+        {
+          roomId,
+          sender: senderId,
+          senderName: senderName,
+          message: content,
+          sentAt: new Date()
+        },
         undefined // No session in this case
       )
 

@@ -1,75 +1,130 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
 import { DarkThemeToggle } from "flowbite-react";
 import { Message } from "@/types/message";
-
-let socket: Socket;
+import { useSocket } from "../contexts/SocketContext";
+import { User } from "@/types/user";
 
 export default function Home() {
+  const [userData, setUserData] = useState<User>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [me, setMe] = useState<string | null>(null);
+  const [users, setUsers] = useState<string[]>([]);
+
+  const { socket } = useSocket();
 
   useEffect(() => {
     // Initialize socket connection
-    socket = io("http://localhost:8080"); // Replace with your server URL
+    if (!socket) {
+      //   console.log("Socket not initialized");
+      //   console.log(socket);
+      return;
+    }
 
-    socket.emit("join_room", "publicChat");
+    const handleConnect = () => {
+      console.log("✅ Socket connected:", socket.id);
 
-    // Listen for incoming messages
-    socket.on("receive_message", ({ message, sender, createdAt }) => {
-      console.log("got message");
-      const newMessage: Message = {
-        _id: "message.id",
-        roomId: "message.roomId",
-        sender: sender,
-        message: message,
-        createdAt: createdAt,
+      socket.emit("join_room", "PublicRoom");
+
+      socket.emit("get_username", (name: string) => {
+        console.log("myname", name);
+        setMe(name);
+      });
+
+      console.log("ming1235");
+
+      socket.on("user-list", (usernames: string[]) => {
+        setUsers(usernames);
+      });
+
+      socket.on(
+        "receive_message",
+        ({ roomId, message, sender, createdAt, senderName }) => {
+          const newMessage: Message = {
+            _id: "message.id",
+            roomId,
+            sender,
+            senderName,
+            message,
+            createdAt,
+          };
+
+          setMessages((prev) => [...prev, newMessage]);
+        },
+      );
+
+      const fetchMessagesByRoomId = async (roomId: string) => {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/messages/roomId/${roomId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch messages");
+          }
+          const data = await response.json();
+          console.log("Fetched messages:", data);
+          setMessages(data.data); // Assuming the messages are in data.data
+        } catch (error) {
+          console.error(
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+          );
+        }
       };
 
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    const fetchMessagesByRoomId = async (roomId: string) => {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/messages/roomId/${roomId}`,
-          {
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch("http://localhost:8080/me", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
             },
-          },
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch messages");
+            credentials: "include",
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          const data = await response.json();
+          console.log("Fetched user data:", data);
+          setUserData(data.data); // Assuming the user data is in data.data
+          setMe(data.data.username);
+          socket.emit("set-username", data.data.username);
+        } catch (error) {
+          console.error(
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+          );
         }
-        const data = await response.json();
-        console.log("Fetched messages:", data);
-        setMessages(data.data); // Assuming the messages are in data.data
-      } catch (error) {
-        console.error(
-          error instanceof Error ? error.message : "An unknown error occurred",
-        );
-      }
+      };
+      fetchUserData();
+      fetchMessagesByRoomId("PublicRoom");
+      setIsLoading(false);
     };
 
-    fetchMessagesByRoomId("กลุ่มเพื่อนปี 34-67f2c99737dfc9a82d5d13b5");
-
-    setIsLoading(false);
-
-    // Cleanup on component unmount
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.once("connect", handleConnect);
+    }
+  }, [socket]);
 
   const createMessageByRoomId = async (
     roomId: string,
     message: string,
     senderId: string,
+    senderName: string,
   ) => {
     try {
       const response = await fetch(`http://localhost:8080/messages`, {
@@ -80,6 +135,7 @@ export default function Home() {
         body: JSON.stringify({
           roomId: roomId,
           senderId: senderId,
+          senderName: senderName,
           content: message,
         }),
       });
@@ -97,23 +153,34 @@ export default function Home() {
   };
 
   const sendMessage = async (message: string) => {
-    if (input.trim() === "") return;
+    if (input.trim() === "" || !me) {
+      console.log(me, socket);
+      console.log("ming123");
+      return;
+    }
+
+    console.log("mingza123", me);
 
     const sentMessage = await createMessageByRoomId(
-      "publicChat",
+      "PublicRoom",
       message,
-      "67f2811591bc62ef817ffb06",
+      "Public",
+      me,
     );
 
     console.log("Sent message:", sentMessage);
 
-    // Emit the message to the server
-    socket.emit("send_message", {
-      roomId: "publicChat",
-      message: sentMessage.message,
-      sender: sentMessage.sender,
-      createdAt: sentMessage.createdAt,
-    });
+    if (socket) {
+      // Emit the message to the server
+      socket.emit("send_message", {
+        roomId: "PublicRoom",
+        message: sentMessage.message,
+        sender: sentMessage.sender,
+        senderName: sentMessage.senderName,
+        createdAt: sentMessage.createdAt,
+      });
+    }
+
     // setMessages((prevMessages) => [...prevMessages, sentMessage]);
   };
 
@@ -122,18 +189,39 @@ export default function Home() {
     setInput("");
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <div>Loading</div>
-      </>
-    );
-  }
+  //   if (isLoading) {
+  //     return (
+  //       <>
+  //         <div>Loading</div>
+  //       </>
+  //     );
+  //   }
+
+  if (!socket || isLoading) return <p>🔄 Connecting to chat server...</p>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-24 dark:bg-gray-900">
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
+      </div>
+
+      <div className="absolute left-18">
+        <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+            Online Users
+          </h2>
+          <ul className="space-y-2">
+            {users.map((user, index) => (
+              <li
+                key={index}
+                className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white"
+              >
+                <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                {user}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="w-full max-w-md">
@@ -146,7 +234,7 @@ export default function Home() {
               key={index}
               className="mb-2 text-sm text-gray-900 dark:text-white"
             >
-              {message.message}
+              {message.senderName}: {message.message}
             </div>
           ))}
         </div>

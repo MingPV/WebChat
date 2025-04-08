@@ -35,6 +35,7 @@ export default function Home() {
       if (!response.ok) {
         throw new Error("Failed to sign-in account");
       }
+
       console.log("Sign-in successfully");
       setSigningIn(false);
       router.push("/home");

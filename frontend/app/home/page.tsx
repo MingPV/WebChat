@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Friend } from "@/types/friend";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 import ChatCard from "../components/chatCard";
 import { Room } from "@/types/room";
 import CreateGroup from "../components/groupCreate";
+import { useSocket } from "../contexts/SocketContext";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
@@ -15,9 +17,23 @@ export default function Home() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [rooms, setRooms] = useState<Room[]>();
 
+  const { socket } = useSocket();
+
+  // user who is using this webchat
+  const [users, setUsers] = useState<string[]>([]);
+
   const router = useRouter();
 
   useEffect(() => {
+    console.log("socket", socket);
+    if (!socket) {
+      return;
+    }
+
+    if (userData) {
+      socket.emit("set_username", userData.username);
+    }
+
     const fetchUserData = async () => {
       try {
         const response = await fetch("http://localhost:8080/me", {
@@ -68,8 +84,13 @@ export default function Home() {
       }
     };
 
+    socket.on("user-list", (usernames: string[]) => {
+      setUsers(usernames);
+      console.log("usernames", usernames);
+    });
+
     fetchUserData();
-  }, []);
+  }, [socket]);
 
   const handleSignOut = async () => {
     try {
@@ -155,6 +176,11 @@ export default function Home() {
   };
 
   const handleAddFriend = async () => {
+    if (friendName == userData?.username) {
+      console.log("You cannot add yourself as a friend");
+      return;
+    }
+
     try {
       const friend_response = await fetch(
         `http://localhost:8080/user/${friendName}`,
@@ -188,6 +214,8 @@ export default function Home() {
       );
     }
   };
+
+  if (!socket) return <p>🔄 Connecting to chat server...</p>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-24 dark:bg-gray-900">
