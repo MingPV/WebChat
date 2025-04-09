@@ -18,6 +18,7 @@ export interface IUser {
   email: string
   password: string
   username: string
+  profile_url: string
   firstName?: string
   lastName?: string
   verified: boolean

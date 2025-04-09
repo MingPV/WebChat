@@ -69,7 +69,9 @@ export const authController = {
   },
 
   signUp: async (
-    { body: { email, password, username } }: IBodyRequest<SignUpPayload>,
+    {
+      body: { email, password, username, profile_url }
+    }: IBodyRequest<SignUpPayload>,
     res: Response
   ) => {
     const session = await startSession()
@@ -94,7 +96,8 @@ export const authController = {
         {
           email,
           password: hashedPassword,
-          username: username
+          username: username,
+          profile_url: profile_url
         },
         session
       )
@@ -141,7 +144,7 @@ export const authController = {
       res.cookie('access_token', accessToken, {
         httpOnly: true, // To prevent access from JavaScript
         secure: false, // Only send cookies over HTTPS in production
-        expires: new Date(Date.now() + 3600 * 1000) // Set expiry (1 hour here)
+        expires: new Date(Date.now() + 3600 * 24000) // Set expiry (1 hour here)
       })
 
       return res.status(StatusCodes.OK).json({

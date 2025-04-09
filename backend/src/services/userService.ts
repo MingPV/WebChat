@@ -8,11 +8,13 @@ export const userService = {
       email,
       password,
       username,
+      profile_url,
       verified = false
     }: {
       email: string
       password: string
       username: string
+      profile_url: string
       verified?: boolean
     },
     session?: ClientSession
@@ -21,6 +23,7 @@ export const userService = {
       email,
       password,
       username,
+      profile_url,
       verified
     }).save({ session }),
   getById: (userId: ObjectId) => User.findById(userId),

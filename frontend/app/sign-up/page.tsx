@@ -1,6 +1,7 @@
 "use client";
 
 import { DarkThemeToggle } from "flowbite-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 // import Link from "next/link";
@@ -13,6 +14,7 @@ export default function Home() {
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState("");
   const [signingUp, setSigningUp] = useState(false);
+  const [profileUrl, setProfileUrl] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -40,6 +42,7 @@ export default function Home() {
           email: email,
           username: username,
           password: password,
+          profile_url: profileUrl,
         }),
         credentials: "include", // ใช้ credentials เพื่อส่ง cookies
       });
@@ -175,6 +178,47 @@ export default function Home() {
             </div>
           </div>
           <div className="text-red-500">{error}</div>
+          <div className="flex flex-row gap-2">
+            <div
+              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile1.png" ? "bg-lime-200" : ""}`}
+              onClick={() => setProfileUrl("/profile1.png")}
+            >
+              Profile 1
+              <Image
+                src={"/profile1.png"}
+                alt={"profile1"}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
+            </div>
+            <div
+              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile2.jpg" ? "bg-lime-200" : ""}`}
+              onClick={() => setProfileUrl("/profile2.jpg")}
+            >
+              Profile 2
+              <Image
+                src={"/profile2.jpg"}
+                alt={"profile1"}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
+            </div>
+            <div
+              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile3.jpg" ? "bg-lime-200" : ""}`}
+              onClick={() => setProfileUrl("/profile3.jpg")}
+            >
+              Profile 3
+              <Image
+                src={"/profile3.jpg"}
+                alt={"profile1"}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </main>

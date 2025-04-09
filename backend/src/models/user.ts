@@ -8,6 +8,7 @@ const schema = new Schema<IUser, UserModel, IUserMethods>(
     email: String,
     password: String,
     username: String,
+    profile_url: String,
     firstName: String,
     lastName: String,
     verified: {
