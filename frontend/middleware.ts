@@ -10,6 +10,8 @@ export function middleware(req: NextRequest) {
     try {
       const payload = JSON.parse(atob(token.split(".")[1])); // Decode the JWT payload
       const isExpired = payload.exp * 1000 < Date.now(); // Check if the token is expired
+      console.log("ming0123", isExpired);
+      console.log("ming4567", isExpired);
       if (isExpired) {
         url.pathname = "/sign-in"; // Redirect to /sign-in if token is expired
         return NextResponse.redirect(url);
@@ -27,7 +29,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  console.log("mingza1236", token, url.pathname);
+  if (token) {
+    console.log("mingza1236", token, url.pathname);
+    const payload = JSON.parse(atob(token.split(".")[1])); // Decode the JWT payload
+    const isExpired = payload.exp * 1000 < Date.now(); // Check if the token is expired
+    console.log("ming0123", isExpired);
+    console.log("ming4567", payload.exp);
+    console.log("ming4567", Date.now());
+  }
 
   if (token && (url.pathname === "/sign-in" || url.pathname === "/sign-up")) {
     url.pathname = "/home"; // Redirect to /home if already logged in

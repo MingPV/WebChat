@@ -43,18 +43,18 @@ export const userController = {
       })
     }
 
-    const media = await mediaService.findOneByRef({
-      refType: MediaRefType.User,
-      refId: user.id
-    })
+    // const media = await mediaService.findOneByRef({
+    //   refType: MediaRefType.User,
+    //   refId: user.id
+    // })
 
-    let image
-    if (media) {
-      image = appUrl(await new Image(media).sharp({ width: 150, height: 150 }))
-    }
+    // let image
+    // if (media) {
+    //   image = appUrl(await new Image(media).sharp({ width: 150, height: 150 }))
+    // }
 
     return res.status(StatusCodes.OK).json({
-      data: { ...user.toJSON(), image },
+      data: { ...user.toJSON() },
       message: ReasonPhrases.OK,
       status: StatusCodes.OK
     })

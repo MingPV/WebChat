@@ -41,11 +41,14 @@ function HomePage() {
           method: "GET",
           credentials: "include",
         });
+        console.log("response");
+        console.log(response);
         if (!response.ok) {
           console.log(response);
           throw new Error("Failed to fetch username");
         }
         const { data } = await response.json();
+        console.log("banana");
         console.log(data._id);
         const response2 = await fetch(
           `http://localhost:8080/friends/userId/${data._id}`,
