@@ -9,6 +9,10 @@ import { useSocket } from "../contexts/SocketContext";
 import { User } from "@/types/user";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Image from "next/image";
+import { IoPeople } from "react-icons/io5";
+import { LuSend } from "react-icons/lu";
+import { TbLogout } from "react-icons/tb";
+import { RxCross2 } from "react-icons/rx";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
@@ -24,6 +28,9 @@ export default function Home() {
   const [currentRoomUsers, setCurrentRoomUsers] = useState<any[]>();
   const [isJoined, setIsJoined] = useState(false);
   const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
+
+  const [isCreateRoom, setIsCreateRoom] = useState(false);
+  const [isSelectedRoomList, setIsSelectedRoomList] = useState(false);
 
   const [privateChatName, setPrivateChatName] = useState("");
 
@@ -390,13 +397,30 @@ export default function Home() {
         createdAt: new Date(),
       };
 
-      setPrivateChat_mySent((prev) => {
+      //   const newMessage: Message = {
+      //     _id: "message.id",
+      //     roomId: "no roomId",
+      //     sender: "senderId",
+      //     senderName: sender,
+      //     message,
+      //     createdAt,
+      //   };
+
+      setPrivateChat((prev) => {
         const updatedChat = new Map(prev);
         const existingMessages = updatedChat.get(sendTo) || [];
         updatedChat.set(sendTo, [...existingMessages, newMessage]);
-        console.log("updatedChat_mySent", updatedChat);
+        console.log("updatedChat", updatedChat);
         return updatedChat;
       });
+
+      //   setPrivateChat_mySent((prev) => {
+      //     const updatedChat = new Map(prev);
+      //     const existingMessages = updatedChat.get(sendTo) || [];
+      //     updatedChat.set(sendTo, [...existingMessages, newMessage]);
+      //     console.log("updatedChat_mySent", updatedChat);
+      //     return updatedChat;
+      //   });
     }
   };
 
@@ -407,141 +431,239 @@ export default function Home() {
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
+      <div className="absolute top-12 left-8 ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-4 py-2">
+        Back <IoMdArrowRoundBack />
+      </div>
 
       <div className="flex w-full flex-row gap-12">
-        <div className="flex flex-col gap-4">
-          <div className="ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-4 py-2">
-            Back <IoMdArrowRoundBack />
-          </div>
-          <div className="rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
-            <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
-              Join a Room
-            </h1>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={joinName}
-                onChange={(e) => setJoinName(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                placeholder="Enter room name..."
-              />
-              <button
-                onClick={() => joinPublicRoomId(joinName)}
-                className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Join
-              </button>
+        <div className="mt-6 flex w-[22vw] flex-col justify-center">
+          <div className="flex flex-row justify-start gap-2">
+            <div
+              className="rounded-t-sm border-2 border-b-0 bg-amber-900/40 p-2 text-sm hover:cursor-pointer"
+              onClick={() => setIsCreateRoom(false)}
+            >
+              Join
+            </div>
+            <div
+              className="rounded-t-sm border-2 border-b-0 bg-amber-900/40 p-2 text-sm hover:cursor-pointer"
+              onClick={() => setIsCreateRoom(true)}
+            >
+              Create
             </div>
           </div>
-          <div className="rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
-            <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
-              Create a Public Group
-            </h1>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                placeholder="Enter group name..."
-              />
-              <button
-                onClick={() => handleCreatePublicGroup(groupName)}
-                className="rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:ring-2 focus:ring-green-300 focus:outline-none dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          <div className="rounded-lg rounded-tl-none border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
+            {isCreateRoom ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  className="flex-1 rounded-lg border bg-orange-100 p-2.5 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                  placeholder="Enter group name..."
+                />
+                <button
+                  onClick={() => handleCreatePublicGroup(groupName)}
+                  className="rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:ring-2 focus:ring-green-300 focus:outline-none dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                >
+                  Create
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={joinName}
+                  onChange={(e) => setJoinName(e.target.value)}
+                  className="flex-1 rounded-lg border bg-orange-100 p-2.5 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                  placeholder="Enter room name..."
+                />
+                <button
+                  onClick={() => joinPublicRoomId(joinName)}
+                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Join
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 mb-4 flex flex-1 flex-col rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
+            <div className="mb-6 flex flex-row justify-between">
+              <h2
+                className={`text-md text-gray-900 hover:cursor-pointer hover:underline dark:text-white ${!isSelectedRoomList ? "underline" : ""}`}
+                onClick={() => setIsSelectedRoomList(false)}
               >
-                Create & Join
-              </button>
+                Online Users
+              </h2>
+              <h2
+                className={`text-md text-gray-900 hover:cursor-pointer hover:underline dark:text-white ${isSelectedRoomList ? "underline" : ""}`}
+                onClick={() => setIsSelectedRoomList(true)}
+              >
+                Online Rooms
+              </h2>
             </div>
-          </div>
-          <div className="mb-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
-            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-              Online Rooms
-            </h2>
-            <ul className="space-y-2" key={rooms.length}>
-              {rooms.map((room, index) => (
-                <li
-                  key={index}
-                  className="flex w-fit flex-col items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
-                  onClick={() => {
-                    joinPublicRoomId(room.roomId.replace("PublicGroup_", ""));
-                  }}
-                >
-                  <div>
-                    <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                    {room.roomId}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {room.members.map((member: any, idx: string) => (
-                      <div key={idx}>
-                        <span className="mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
-                        {member.username}
-                      </div>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
-            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-              Online Users
-            </h2>
-            <ul className="space-y-2">
-              {users.map((user, index) => (
-                <li
-                  key={index}
-                  className="flex w-fit items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
-                  onClick={() => {
-                    setPrivateChatName(user);
-                    setIsPrivateChatOpen(!isPrivateChatOpen);
-                  }}
-                >
-                  <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                  {user}
-                </li>
-              ))}
-            </ul>
+
+            {isSelectedRoomList ? (
+              <ul className="w-full flex-1 columns-1" key={rooms.length}>
+                {rooms.map((room, index) => (
+                  <li
+                    key={index}
+                    className="inline-block items-center gap-2 rounded-lg bg-gray-100 px-6 py-3 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                    onClick={() => {
+                      joinPublicRoomId(room.roomId.replace("PublicGroup_", ""));
+                    }}
+                  >
+                    <div>
+                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                      {room.roomId}
+                    </div>
+                    <div className="mt-3 ml-6 flex flex-col gap-1">
+                      {room.members.map((member: any, idx: string) => (
+                        <div key={idx}>
+                          <span className="mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
+                          {member.username}
+                        </div>
+                      ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul
+                className="w-full flex-1 columns-2 space-y-3"
+                key={users.length}
+              >
+                {users.map((user, index) => (
+                  <li
+                    key={index}
+                    className="inline-block w-fit items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                    onClick={() => {
+                      if (user != privateChatName && isPrivateChatOpen) {
+                        setPrivateChatName(user);
+                        return;
+                      }
+                      setPrivateChatName(user);
+                      setIsPrivateChatOpen(!isPrivateChatOpen);
+                    }}
+                  >
+                    <div>
+                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                      {user}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="flex flex-col items-center gap-2">
+              <div className="text-sm text-black/50">1/1</div>
+              <div className="flex justify-center">
+                <div className="flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-white px-3 text-sm font-bold text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                  {"<"}
+                </div>
+
+                <div className="ms-3 flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-white px-3 text-sm font-bold text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                  {">"}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex flex-1 flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
+        <div
+          className={`flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 py-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "w-[50vw]" : "w-[70vw]"} `}
+        >
           <div className="flex-1">
-            <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
+            <h1 className="mb-4 ml-8 text-start text-xl font-semibold text-gray-900/80 dark:text-white">
               Room: {currentRoom}
             </h1>
-            <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+
+            <div className="mb-4 h-[60vh] overflow-y-auto bg-orange-100 p-4 dark:border-gray-600 dark:bg-gray-700">
               {currentRoom == "PublicRoom"
                 ? messages.map((message, index) => (
-                    <div className="my-4 flex items-start gap-2.5" key={index}>
-                      <Image
-                        className="h-10 w-10 rounded-full"
-                        src="/profile1.png"
-                        alt="Jese image"
-                        width={48}
-                        height={48}
-                      />
-                      <div className="flex w-full max-w-[320px] flex-col gap-1 rounded-e-xl rounded-es-xl border-gray-200">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                          <span className="text-sm font-bold text-gray-700 dark:text-white">
-                            {message.senderName}
-                          </span>
+                    <div key={index} className="w-full">
+                      {message.senderName == me ? (
+                        <div className="my-4 flex w-full justify-end gap-2.5">
+                          <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
+                            <div className="flex flex-row gap-2">
+                              <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                11:42
+                              </span>
+                              <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                                {message.message}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex flex-row gap-2">
-                          <p className="rounded-md border-2 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 font-mono text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
-                            {message.message}
-                          </p>
-                          <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                            11:46
-                          </span>
+                      ) : (
+                        <div className="my-4 flex items-start gap-2.5">
+                          <Image
+                            className="h-10 w-10 rounded-full"
+                            src="/profile1.png"
+                            alt="Jese image"
+                            width={48}
+                            height={48}
+                          />
+                          <div className="flex w-full max-w-[320px] flex-col gap-1">
+                            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                              <span className="text-sm font-bold text-gray-700 dark:text-white">
+                                {message.senderName}
+                              </span>
+                            </div>
+                            <div className="flex flex-row gap-2">
+                              <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                                {message.message}
+                              </p>
+                              <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                11:46
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
+                    // {message.senderName}
                   ))
                 : currentRoomMessages.map((message, index) => (
-                    <div
-                      key={index}
-                      className="mb-2 text-sm text-gray-900 dark:text-white"
-                    >
-                      {message.senderName}: {message.message}
+                    <div key={index} className="w-full">
+                      {message.senderName == me ? (
+                        <div className="my-4 flex w-full justify-end gap-2.5">
+                          <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
+                            <div className="flex flex-row gap-2">
+                              <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                11:42
+                              </span>
+                              <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                                {message.message}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="my-4 flex items-start gap-2.5">
+                          <Image
+                            className="h-10 w-10 rounded-full"
+                            src="/profile1.png"
+                            alt="Jese image"
+                            width={48}
+                            height={48}
+                          />
+                          <div className="flex w-full max-w-[320px] flex-col gap-1">
+                            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                              <span className="text-sm font-bold text-gray-700 dark:text-white">
+                                {message.senderName}
+                              </span>
+                            </div>
+                            <div className="flex flex-row gap-2">
+                              <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                                {message.message}
+                              </p>
+                              <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                11:46
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
             </div>
@@ -550,37 +672,40 @@ export default function Home() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="text-md ml-10 flex-1 rounded-lg border-none bg-amber-50/60 py-2 pr-2 pl-2 text-gray-900 focus:ring-0 focus:outline-none"
                 placeholder="Type your message..."
               />
               <button
                 onClick={handleSendMessage}
-                className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="mr-6 rounded-md p-2 text-2xl hover:cursor-pointer"
               >
-                Send
+                <LuSend />
               </button>
               {isJoined ? (
                 <button
                   onClick={() => {
                     leavePublicRoomId(currentRoom);
                   }}
-                  className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white"
                 >
                   Leave
                 </button>
               ) : null}
             </div>
           </div>
-          {currentRoom == "PublicRoom" || isPrivateChatOpen ? null : (
-            <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-              <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-                Members
+          {currentRoom == "PublicRoom" ? null : (
+            <div className={`m-4 mr-6`}>
+              <h2 className="mb-4 flex flex-row items-center justify-center gap-2 text-center text-lg text-gray-900 dark:text-white">
+                {"members"}
+                <span>
+                  <IoPeople />
+                </span>
               </h2>
               <ul className="space-y-2">
                 {(currentRoomUsers ?? []).map((user, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white"
+                    className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 text-xs text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white"
                   >
                     <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
                     {user.username} {user.username == me ? "(me)" : ""}
@@ -590,62 +715,87 @@ export default function Home() {
             </div>
           )}
         </div>
-        {isPrivateChatOpen ? (
-          <div className="flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
-            <div>
-              <div className="mb-4 flex flex-row items-center justify-between text-center text-xl font-bold text-gray-900 dark:text-white">
-                <div className="ml-4">Chat with {privateChatName}</div>
-                <span
-                  className="flex w-fit flex-row justify-end rounded-lg p-2 hover:cursor-pointer hover:bg-slate-400"
-                  onClick={() => {
-                    setIsPrivateChatOpen(false);
-                  }}
-                >
-                  X
-                </span>
-              </div>
-              <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-                {(privateChat?.get(privateChatName) ?? []).map(
-                  (message, index) => (
-                    <div
-                      key={index}
-                      className="mb-2 text-sm text-gray-900 dark:text-white"
-                    >
-                      {message.senderName}: {message.message}
-                    </div>
-                  ),
-                )}
-              </div>
-              <div className="bg-slate-100">
-                {(privateChat_mySent?.get(privateChatName) ?? []).map(
-                  (message, index) => (
-                    <div
-                      key={index}
-                      className="mb-2 text-sm text-gray-900 dark:text-white"
-                    >
-                      {message.senderName}: {message.message}
-                    </div>
-                  ),
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={input2}
-                  onChange={(e) => setInput2(e.target.value)}
-                  className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="Type your message..."
-                />
-                <button
-                  onClick={() => handleSendMessage2(privateChatName, input2)}
-                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Send
-                </button>
-              </div>
+
+        <div
+          className={`absolute right-8 flex w-[20vw] flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "translate-x-0" : "translate-x-96"}`}
+        >
+          <div className="w-full">
+            <div className="mb-4 flex flex-row items-center justify-between text-center font-bold text-gray-900 dark:text-white">
+              <div className="text-md ml-4">Chat with {privateChatName}</div>
+              <span
+                className="flex w-fit flex-row justify-end rounded-lg bg-red-700/80 p-2 text-white hover:cursor-pointer hover:bg-red-600/90"
+                onClick={() => {
+                  setIsPrivateChatOpen(false);
+                }}
+              >
+                <RxCross2 />
+              </span>
+            </div>
+            <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border bg-orange-100 p-4 dark:border-gray-600 dark:bg-gray-700">
+              {(privateChat?.get(privateChatName) ?? []).map(
+                (message, index) => (
+                  <div key={index} className="w-full">
+                    {message.senderName == me ? (
+                      <div className="my-4 flex w-full justify-end gap-2.5">
+                        <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
+                          <div className="flex flex-row gap-2">
+                            <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                              11:42
+                            </span>
+                            <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              {message.message}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="my-4 flex items-start gap-2.5">
+                        <Image
+                          className="h-10 w-10 rounded-full"
+                          src="/profile1.png"
+                          alt="Jese image"
+                          width={48}
+                          height={48}
+                        />
+                        <div className="flex w-full max-w-[320px] flex-col gap-1">
+                          <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                            <span className="text-sm font-bold text-gray-700 dark:text-white">
+                              {message.senderName}
+                            </span>
+                          </div>
+                          <div className="flex flex-row gap-2">
+                            <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              {message.message}
+                            </p>
+                            <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                              11:46
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ),
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={input2}
+                onChange={(e) => setInput2(e.target.value)}
+                className="flex-1 rounded-lg border-none bg-amber-50/60 py-2 pr-2 pl-2 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                placeholder="Type your message..."
+              />
+              <button
+                onClick={() => handleSendMessage2(privateChatName, input2)}
+                className="rounded-md p-2 text-2xl hover:cursor-pointer"
+              >
+                <LuSend />
+              </button>
             </div>
           </div>
-        ) : null}
+        </div>
       </div>
     </main>
   );

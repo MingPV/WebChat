@@ -30,7 +30,7 @@ export default function RootLayout({
         <ThemeModeScript />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden overflow-y-hidden font-mono antialiased`}
       >
         <SocketProvider>{children}</SocketProvider>
       </body>
