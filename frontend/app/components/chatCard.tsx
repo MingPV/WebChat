@@ -11,7 +11,7 @@ type Props = { room: Room; myData: User };
 export default function ChatCard({ room, myData }: Props) {
   const { socket } = useSocket();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -29,9 +29,6 @@ export default function ChatCard({ room, myData }: Props) {
       socket.emit("join_room", room.roomId);
       setIsJoined(true);
     }
-
-    console.log(room);
-    console.log("ming");
 
     // Listen for incoming messages
     socket.on(
@@ -152,24 +149,19 @@ export default function ChatCard({ room, myData }: Props) {
 
   return (
     <>
-      <div key={room._id} className="flex flex-row gap-2 border-b p-2">
-        <div className="flex flex-row">
-          <div>
-            <div>{room.name}</div>
-            <div
-              className="cursor-pointer rounded-md bg-sky-300 p-2"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              Chat
-            </div>
-          </div>
-          <div className="m-6">
+      <div
+        key={room._id}
+        className="flex w-full flex-row gap-2 border-b bg-slate-300"
+      >
+        <div className="flex w-full flex-row">
+          <div className="m-6 w-full">
             {isOpen && (
-              <div className="flex flex-col gap-2">
+              <div className="flex w-full flex-col gap-2">
                 {isLoading ? (
                   <div>Loading...</div>
                 ) : (
-                  <div className="mx-auto mt-4 flex h-[40vh] max-w-lg flex-col rounded-2xl border bg-white shadow-md">
+                  // chat card start here
+                  <div className="flex h-[40vh] w-full max-w-lg flex-col rounded-2xl border bg-white shadow-md">
                     <div className="flex-1 space-y-2 overflow-y-auto p-4">
                       {messages?.map((msg, idx) => {
                         const isMe = msg.sender === myData._id;
@@ -192,6 +184,7 @@ export default function ChatCard({ room, myData }: Props) {
                       })}
                     </div>
 
+                    {/* input and send button */}
                     <div className="flex items-center gap-2 border-t p-3">
                       <input
                         type="text"

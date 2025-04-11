@@ -10,6 +10,10 @@ import ChatCard from "../components/chatCard";
 import { Room } from "@/types/room";
 import CreateGroup from "../components/groupCreate";
 import { useSocket } from "../contexts/SocketContext";
+import { IoIosArrowForward } from "react-icons/io";
+import { TbLogout } from "react-icons/tb";
+import Link from "next/link";
+
 // import { withAuth } from "@/utils/withAuth";
 
 function HomePage() {
@@ -17,6 +21,8 @@ function HomePage() {
   const [friendName, setFriendName] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [rooms, setRooms] = useState<Room[]>();
+  const [tab, setTab] = useState<string>("chat");
+  const [isLoading, setIsLoading] = useState(true);
 
   const { socket } = useSocket();
 
@@ -81,6 +87,7 @@ function HomePage() {
         setRooms(data3);
         setFriends(data2);
         setUserData(data);
+        setIsLoading(false);
       } catch (error) {
         console.error(
           error instanceof Error ? error.message : "An unknown error occurred",
@@ -210,6 +217,7 @@ function HomePage() {
       if (!response.ok) {
         throw new Error("Failed to add friend");
       }
+      setFriendName("");
       console.log("Add friend successfully");
       console.log(response);
     } catch (error) {
@@ -219,6 +227,19 @@ function HomePage() {
     }
   };
 
+  type ChatCardInfo = {
+    room: Room;
+    myData: User;
+    key: string;
+  };
+  const [chatCardInfo, setChatCardInfo] = useState<ChatCardInfo | null>(null);
+  const [activeMobileView, setActiveMobileView] = useState<string>("list");
+  const displayRoomName = (room: Room) => {
+    const rawNameSplit = room.name.split(" ");
+    const name = rawNameSplit[rawNameSplit.length - 1];
+    return name;
+  };
+
   if (!socket) return <p>🔄 Connecting to chat server...</p>;
 
   return (
@@ -226,78 +247,208 @@ function HomePage() {
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
-      <div className="flex flex-row gap-12">
-        <div className="flex flex-col gap-2 border p-4">
-          <div>Friend Requests</div>
-          {friends.map(
-            (friend) =>
-              !friend.is_accepted && (
-                <div
-                  key={friend._id}
-                  className="flex flex-row gap-2 border-b p-2"
-                >
-                  <div>{friend.friend_name}</div>
-                  <div
-                    className="cursor-pointer rounded-md bg-lime-500 p-2"
-                    onClick={() => {
-                      handleAcceptFriend(friend._id, friend.friend_id);
-                      // hide this component after accept
-                    }}
+
+      <div className="flex w-[70vw] flex-row items-center justify-between gap-4 rounded-2xl p-1">
+        {/* Navigation Tabs */}
+        <ul className="flex flex-row gap-2">
+          <li>
+            <button
+              onClick={() => setTab("chat")}
+              className={`rounded-lg rounded-md border-2 border-r-4 border-b-4 px-6 py-2 font-bold ${
+                tab === "chat" ? "bg-slate-400" : "bg-slate-200"
+              }`}
+            >
+              Chat
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => setTab("friends")}
+              className={`rounded-lg rounded-md border-2 border-r-4 border-b-4 px-6 py-2 font-bold ${
+                tab === "friends" ? "bg-slate-400" : "bg-slate-200"
+              }`}
+            >
+              Friends
+            </button>
+          </li>
+        </ul>
+
+        {/* Logout Button */}
+        <div className="flex justify-center rounded-lg border-2 border-r-4 border-b-4">
+          <button
+            onClick={handleSignOut}
+            className="flex flex-row items-center gap-2 rounded-md bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-600"
+          >
+            <span className="text-xl font-bold">
+              <TbLogout />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex h-[60vh] w-[70vw] items-start justify-between rounded-2xl">
+        {tab === "chat" && (
+          <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
+            <div className="flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4 bg-white">
+              <div className="text-md rounded-md rounded-b-none bg-blue-200 p-2 font-bold">
+                Friends
+              </div>
+              {isLoading ? (
+                <div className="flex flex-col gap-2 text-sm">
+                  <p
+                    className={`skeleton mx-2 w-64 rounded-lg bg-slate-100 p-2`}
                   >
-                    Accept
+                    Loading...
+                  </p>
+                  <p
+                    className={`skeleton mx-2 w-64 rounded-lg bg-slate-100 p-2`}
+                  >
+                    Loading...
+                  </p>
+                  <p
+                    className={`skeleton mx-2 w-64 rounded-lg bg-slate-100 p-2`}
+                  >
+                    Loading...
+                  </p>
+                  <p
+                    className={`skeleton mx-2 w-64 rounded-lg bg-slate-100 p-2`}
+                  >
+                    Loading...
+                  </p>
+                </div>
+              ) : rooms ? (
+                rooms.length > 0 ? (
+                  rooms.map((room) =>
+                    userData ? (
+                      <button
+                        key={room._id}
+                        className={`mx-2 w-64 rounded-lg p-2 text-sm transition ${
+                          chatCardInfo?.key === room._id
+                            ? "bg-slate-300"
+                            : "bg-slate-100"
+                        } `}
+                        onClick={() => {
+                          setChatCardInfo({
+                            room: room,
+                            myData: userData!,
+                            key: room._id,
+                          });
+                        }}
+                      >
+                        <div className="flex flex-row items-center justify-between">
+                          <p>{displayRoomName(room)}</p>
+                          <p className="font-bold">
+                            <IoIosArrowForward />
+                          </p>
+                        </div>
+                      </button>
+                    ) : (
+                      <p className="text-3xl">you have no userdata</p>
+                    ),
+                  )
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-4">
+                    <p className="p-2 text-center">
+                      you don't have any friends, please add friends by{" "}
+                      <strong>
+                        choose FRIENDS tab and fill their username
+                      </strong>{" "}
+                      or go to public chat here
+                    </p>
+                    <Link href="/publicChat">
+                      <button className="rounded-lg bg-slate-300 px-4 py-2">
+                        To Public Chat
+                      </button>
+                    </Link>
                   </div>
-                  <div
-                    className="cursor-pointer rounded-md bg-red-500 p-2"
-                    onClick={() => {
-                      handleRejectFriend(friend._id, friend.friend_id);
-                      // hide this component after reject
-                    }}
-                  >
-                    Reject
+                )
+              ) : (
+                <p>you have no rooms</p>
+              )}
+            </div>
+            <div className="w-full bg-slate-400">
+              {!chatCardInfo && <p>start conversation</p>}
+              {chatCardInfo && (
+                <div key={chatCardInfo.key} className="w-full">
+                  <ChatCard
+                    room={chatCardInfo.room}
+                    myData={chatCardInfo.myData}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        {tab === "friends" && (
+          <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
+            <div className="grid w-full grid-cols-2 gap-4">
+              <div className="col-span-1 rounded-lg">
+                <div className="mb-4 h-full rounded-lg border-2 border-r-4 border-b-4">
+                  {userData ? <CreateGroup myData={userData} /> : null}
+                </div>
+              </div>
+              <div className="col-span-1 flex h-full flex-col">
+                {/* Add Friend Section */}
+                <div className="w-full flex-none flex-col justify-center rounded-lg border-2 border-r-4 border-b-4">
+                  <div className="rounded-lg rounded-b-none bg-slate-200 p-2 font-bold">
+                    Add friend by username
+                  </div>
+                  <div className="flex w-full flex-row items-center justify-center p-4">
+                    <div className="flex w-full flex-row justify-between gap-2 p-2">
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        value={friendName}
+                        placeholder="Enter friend's username..."
+                        onChange={(e) => setFriendName(e.target.value)}
+                      />
+                      <div
+                        className="cursor-pointer rounded-md border border-black bg-white px-4 py-2 text-center"
+                        onClick={handleAddFriend}
+                      >
+                        Add
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ),
-          )}
-          <div>Friends</div>
-          {rooms
-            ? rooms.map((room) =>
-                userData ? (
-                  <ChatCard key={room._id} room={room} myData={userData} />
-                ) : null,
-              )
-            : null}
-        </div>
-        <div className="flex w-full flex-col justify-center">
-          <div className="m-2">Add friend by username</div>
-          <div className="flex w-full flex-col items-center justify-center bg-lime-200 p-4">
-            <div>
-              <input
-                type="text"
-                className="bg-white"
-                value={friendName}
-                onChange={(e) => setFriendName(e.target.value)}
-              />
-            </div>
-            <div className="flex w-full justify-center">
-              <div
-                className="mt-4 cursor-pointer border border-black bg-white p-2 text-center"
-                onClick={handleAddFriend}
-              >
-                {" "}
-                Add
+
+                {/* Friend Requests List (takes remaining height) */}
+                <div className="mt-4 flex grow flex-col overflow-auto rounded-lg border-2 border-r-4 border-b-4">
+                  <p className="mb-2 bg-slate-200 p-2 font-bold">
+                    Friend Requests
+                  </p>
+                  {friends.map(
+                    (friend) =>
+                      !friend.is_accepted && (
+                        <div
+                          key={friend._id}
+                          className="mb-2 flex flex-row items-center justify-between gap-2 border-b p-2"
+                        >
+                          <div className="flex-1">{friend.friend_name}</div>
+                          <div
+                            className="cursor-pointer rounded-md bg-lime-500 p-2"
+                            onClick={() =>
+                              handleAcceptFriend(friend._id, friend.friend_id)
+                            }
+                          >
+                            Accept
+                          </div>
+                          <div
+                            className="cursor-pointer rounded-md bg-red-500 p-2"
+                            onClick={() =>
+                              handleRejectFriend(friend._id, friend.friend_id)
+                            }
+                          >
+                            Reject
+                          </div>
+                        </div>
+                      ),
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex w-full justify-center">
-            <div
-              className="mt-12 flex w-fit cursor-pointer rounded-md bg-red-500 p-2"
-              onClick={handleSignOut}
-            >
-              Logout
-            </div>
-          </div>
-        </div>
-        <div>{userData ? <CreateGroup myData={userData} /> : null}</div>
+        )}
       </div>
     </main>
   );
