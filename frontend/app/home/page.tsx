@@ -424,7 +424,7 @@ function HomePage() {
                   </p>
                   {friends.map(
                     (friend) =>
-                      !friend.is_accepted && (
+                      friend.status == "waiting for accept" && (
                         <div
                           key={friend._id}
                           className="mb-2 flex flex-row items-center justify-between gap-2 border-b p-2"
