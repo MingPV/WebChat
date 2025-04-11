@@ -187,6 +187,11 @@ function HomePage() {
   };
 
   const handleAddFriend = async () => {
+    if (!userData || !friendName) {
+      alert("no userData or friendName");
+      return;
+    }
+
     if (friendName == userData?.username) {
       console.log("You cannot add yourself as a friend");
       return;
