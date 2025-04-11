@@ -7,6 +7,8 @@ import { DarkThemeToggle } from "flowbite-react";
 import { Message } from "@/types/message";
 import { useSocket } from "../contexts/SocketContext";
 import { User } from "@/types/user";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import Image from "next/image";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
@@ -21,6 +23,7 @@ export default function Home() {
   const [currentRoomMessages, setCurrentRoomMessages] = useState<Message[]>([]);
   const [currentRoomUsers, setCurrentRoomUsers] = useState<any[]>();
   const [isJoined, setIsJoined] = useState(false);
+  const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
 
   const [privateChatName, setPrivateChatName] = useState("");
 
@@ -405,59 +408,11 @@ export default function Home() {
         <DarkThemeToggle />
       </div>
 
-      <div className="absolute top-18 left-18 flex flex-row gap-2">
-        <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-            Online Rooms
-          </h2>
-          <ul className="space-y-2" key={rooms.length}>
-            {rooms.map((room, index) => (
-              <li
-                key={index}
-                className="flex flex-col items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
-                onClick={() => {
-                  joinPublicRoomId(room.roomId.replace("PublicGroup_", ""));
-                }}
-              >
-                <div>
-                  <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                  {room.roomId}
-                </div>
-                <div className="flex flex-col gap-1">
-                  {room.members.map((member: any, idx: string) => (
-                    <div key={idx}>
-                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
-                      {member.username}
-                    </div>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-            Online Users
-          </h2>
-          <ul className="space-y-2">
-            {users.map((user, index) => (
-              <li
-                key={index}
-                className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
-                onClick={() => {
-                  setPrivateChatName(user);
-                }}
-              >
-                <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                {user}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="flex flex-row gap-12">
+      <div className="flex w-full flex-row gap-12">
         <div className="flex flex-col gap-4">
+          <div className="ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-4 py-2">
+            Back <IoMdArrowRoundBack />
+          </div>
           <div className="rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
             <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
               Join a Room
@@ -498,20 +453,87 @@ export default function Home() {
               </button>
             </div>
           </div>
+          <div className="mb-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+              Online Rooms
+            </h2>
+            <ul className="space-y-2" key={rooms.length}>
+              {rooms.map((room, index) => (
+                <li
+                  key={index}
+                  className="flex w-fit flex-col items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                  onClick={() => {
+                    joinPublicRoomId(room.roomId.replace("PublicGroup_", ""));
+                  }}
+                >
+                  <div>
+                    <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                    {room.roomId}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {room.members.map((member: any, idx: string) => (
+                      <div key={idx}>
+                        <span className="mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
+                        {member.username}
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+              Online Users
+            </h2>
+            <ul className="space-y-2">
+              {users.map((user, index) => (
+                <li
+                  key={index}
+                  className="flex w-fit items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                  onClick={() => {
+                    setPrivateChatName(user);
+                    setIsPrivateChatOpen(!isPrivateChatOpen);
+                  }}
+                >
+                  <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                  {user}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
-          <div>
+        <div className="flex flex-1 flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
+          <div className="flex-1">
             <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
               Room: {currentRoom}
             </h1>
-            <div className="mb-4 h-64 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+            <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
               {currentRoom == "PublicRoom"
                 ? messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className="mb-2 text-sm text-gray-900 dark:text-white"
-                    >
-                      {message.senderName}: {message.message}
+                    <div className="my-4 flex items-start gap-2.5" key={index}>
+                      <Image
+                        className="h-10 w-10 rounded-full"
+                        src="/profile1.png"
+                        alt="Jese image"
+                        width={48}
+                        height={48}
+                      />
+                      <div className="flex w-full max-w-[320px] flex-col gap-1 rounded-e-xl rounded-es-xl border-gray-200">
+                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                          <span className="text-sm font-bold text-gray-700 dark:text-white">
+                            {message.senderName}
+                          </span>
+                        </div>
+                        <div className="flex flex-row gap-2">
+                          <p className="rounded-md border-2 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 font-mono text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                            {message.message}
+                          </p>
+                          <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                            11:46
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   ))
                 : currentRoomMessages.map((message, index) => (
@@ -549,10 +571,10 @@ export default function Home() {
               ) : null}
             </div>
           </div>
-          <div>
+          {currentRoom == "PublicRoom" || isPrivateChatOpen ? null : (
             <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
               <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-                {currentRoom}
+                Members
               </h2>
               <ul className="space-y-2">
                 {(currentRoomUsers ?? []).map((user, index) => (
@@ -566,54 +588,64 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-          </div>
+          )}
         </div>
-        <div className="flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
-          <div>
-            <h1 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
-              Chat with {privateChatName}
-            </h1>
-            <div className="mb-4 h-64 overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-              {(privateChat?.get(privateChatName) ?? []).map(
-                (message, index) => (
-                  <div
-                    key={index}
-                    className="mb-2 text-sm text-gray-900 dark:text-white"
-                  >
-                    {message.senderName}: {message.message}
-                  </div>
-                ),
-              )}
-            </div>
-            <div className="bg-slate-100">
-              {(privateChat_mySent?.get(privateChatName) ?? []).map(
-                (message, index) => (
-                  <div
-                    key={index}
-                    className="mb-2 text-sm text-gray-900 dark:text-white"
-                  >
-                    {message.senderName}: {message.message}
-                  </div>
-                ),
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={input2}
-                onChange={(e) => setInput2(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                placeholder="Type your message..."
-              />
-              <button
-                onClick={() => handleSendMessage2(privateChatName, input2)}
-                className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Send
-              </button>
+        {isPrivateChatOpen ? (
+          <div className="flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
+            <div>
+              <div className="mb-4 flex flex-row items-center justify-between text-center text-xl font-bold text-gray-900 dark:text-white">
+                <div className="ml-4">Chat with {privateChatName}</div>
+                <span
+                  className="flex w-fit flex-row justify-end rounded-lg p-2 hover:cursor-pointer hover:bg-slate-400"
+                  onClick={() => {
+                    setIsPrivateChatOpen(false);
+                  }}
+                >
+                  X
+                </span>
+              </div>
+              <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border border-gray-300 bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+                {(privateChat?.get(privateChatName) ?? []).map(
+                  (message, index) => (
+                    <div
+                      key={index}
+                      className="mb-2 text-sm text-gray-900 dark:text-white"
+                    >
+                      {message.senderName}: {message.message}
+                    </div>
+                  ),
+                )}
+              </div>
+              <div className="bg-slate-100">
+                {(privateChat_mySent?.get(privateChatName) ?? []).map(
+                  (message, index) => (
+                    <div
+                      key={index}
+                      className="mb-2 text-sm text-gray-900 dark:text-white"
+                    >
+                      {message.senderName}: {message.message}
+                    </div>
+                  ),
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={input2}
+                  onChange={(e) => setInput2(e.target.value)}
+                  className="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  placeholder="Type your message..."
+                />
+                <button
+                  onClick={() => handleSendMessage2(privateChatName, input2)}
+                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Send
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </main>
   );
