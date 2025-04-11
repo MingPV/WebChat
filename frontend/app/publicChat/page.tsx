@@ -325,6 +325,7 @@ export default function Home() {
 
       setIsJoined(true);
     }
+    setJoinName("");
   };
 
   const leavePublicRoomId = async (roomId: string) => {
@@ -369,6 +370,8 @@ export default function Home() {
 
       setIsJoined(true);
     }
+
+    setGroupName("");
   };
 
   const handleSendMessage = () => {
@@ -427,11 +430,11 @@ export default function Home() {
   if (!socket || isLoading) return <p>🔄 Connecting to chat server...</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-24 dark:bg-gray-900">
+    <main className="bg-base-100 dark:bg-base-1100/90 flex min-h-screen flex-col items-center justify-center bg-cover px-4 py-24 transition-all duration-1000">
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
-      <div className="absolute top-12 left-8 ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-4 py-2">
+      <div className="bg-base-300 hover:bg-base-200 dark:bg-base-200 dark:hover:bg-base-350 absolute top-12 left-8 ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 px-4 py-2 transition-all duration-300 hover:cursor-pointer">
         Back <IoMdArrowRoundBack />
       </div>
 
@@ -439,31 +442,31 @@ export default function Home() {
         <div className="mt-6 flex w-[22vw] flex-col justify-center">
           <div className="flex flex-row justify-start gap-2">
             <div
-              className="rounded-t-sm border-2 border-b-0 bg-amber-900/40 p-2 text-sm hover:cursor-pointer"
+              className="bg-base-200 hover:bg-base-300 dark:bg-base-300 dark:hover:bg-base-350 dark:text-base-100 rounded-t-sm border-2 border-b-0 p-2 text-sm transition-all duration-300 hover:cursor-pointer dark:border-black"
               onClick={() => setIsCreateRoom(false)}
             >
               Join
             </div>
             <div
-              className="rounded-t-sm border-2 border-b-0 bg-amber-900/40 p-2 text-sm hover:cursor-pointer"
+              className="bg-base-200 hover:bg-base-300 dark:bg-base-300 dark:hover:bg-base-350 dark:text-base-100 rounded-t-sm border-2 border-b-0 p-2 text-sm transition-all duration-300 hover:cursor-pointer dark:border-black"
               onClick={() => setIsCreateRoom(true)}
             >
               Create
             </div>
           </div>
-          <div className="rounded-lg rounded-tl-none border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4">
+          <div className="bg-base-300 dark:bg-base-400 rounded-lg rounded-tl-none border-2 border-r-4 border-b-4 border-black/80 p-4 transition-all duration-1000">
             {isCreateRoom ? (
               <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
-                  className="flex-1 rounded-lg border bg-orange-100 p-2.5 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                  className="bg-base-100 flex-1 rounded-lg border p-2.5 text-sm text-gray-900 transition-all duration-1000 focus:ring-0 focus:outline-none"
                   placeholder="Enter group name..."
                 />
                 <button
                   onClick={() => handleCreatePublicGroup(groupName)}
-                  className="rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 focus:ring-2 focus:ring-green-300 focus:outline-none dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  className="bg-base-400 hover:bg-base-350 dark:bg-base-300 dark:hover:bg-base-500 dark:text-base-100 focus:ring-none rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:cursor-pointer focus:ring-2 focus:outline-none"
                 >
                   Create
                 </button>
@@ -474,12 +477,12 @@ export default function Home() {
                   type="text"
                   value={joinName}
                   onChange={(e) => setJoinName(e.target.value)}
-                  className="flex-1 rounded-lg border bg-orange-100 p-2.5 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                  className="bg-base-100 flex-1 rounded-lg border p-2.5 text-sm text-gray-900 focus:ring-0 focus:outline-none"
                   placeholder="Enter room name..."
                 />
                 <button
                   onClick={() => joinPublicRoomId(joinName)}
-                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="bg-base-400 hover:bg-base-350 dark:bg-base-300 dark:hover:bg-base-500 dark:text-base-100 focus:ring-none rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:cursor-pointer focus:ring-2 focus:outline-none"
                 >
                   Join
                 </button>
@@ -487,8 +490,8 @@ export default function Home() {
             )}
           </div>
 
-          <div className="mt-4 mb-4 flex flex-1 flex-col rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 px-6 py-3">
-            <div className="mb-6 flex flex-row justify-between">
+          <div className="bg-base-300 dark:bg-base-400 mt-4 mb-4 flex flex-1 flex-col rounded-lg border-2 border-r-4 border-b-4 border-black/80 transition-all duration-1000">
+            <div className="mx-3 my-3 flex flex-row items-center justify-center gap-8">
               <h2
                 className={`text-md text-gray-900 hover:cursor-pointer hover:underline dark:text-white ${!isSelectedRoomList ? "underline" : ""}`}
                 onClick={() => setIsSelectedRoomList(false)}
@@ -504,23 +507,26 @@ export default function Home() {
             </div>
 
             {isSelectedRoomList ? (
-              <ul className="w-full flex-1 columns-1" key={rooms.length}>
+              <ul
+                className="bg-base-200 w-full flex-1 columns-1 space-y-3 pt-4"
+                key={rooms.length}
+              >
                 {rooms.map((room, index) => (
                   <li
                     key={index}
-                    className="inline-block items-center gap-2 rounded-lg bg-gray-100 px-6 py-3 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                    className="bg-base-100 dark:bg-base-300 dark:text-base-600 dark:hover:bg-base-350 dark:hover:text-base-100 hover:bg-base-300 mx-2 inline-block w-fit items-center gap-2 rounded-lg p-2 text-sm text-gray-900 shadow-sm transition-all duration-300 hover:cursor-pointer"
                     onClick={() => {
                       joinPublicRoomId(room.roomId.replace("PublicGroup_", ""));
                     }}
                   >
                     <div>
-                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500 dark:bg-lime-500"></span>
                       {room.roomId}
                     </div>
                     <div className="mt-3 ml-6 flex flex-col gap-1">
                       {room.members.map((member: any, idx: string) => (
                         <div key={idx}>
-                          <span className="mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
+                          <span className="dark:bg-base-100 mr-4 inline-block h-2 w-2 rounded-full bg-cyan-800/40"></span>
                           {member.username}
                         </div>
                       ))}
@@ -530,13 +536,13 @@ export default function Home() {
               </ul>
             ) : (
               <ul
-                className="w-full flex-1 columns-2 space-y-3"
+                className="bg-base-200 w-full flex-1 columns-2 space-y-3 pt-4"
                 key={users.length}
               >
                 {users.map((user, index) => (
                   <li
                     key={index}
-                    className="inline-block w-fit items-center gap-2 rounded-lg bg-gray-100 p-2 text-sm text-gray-900 shadow-sm hover:cursor-pointer hover:bg-gray-300 dark:bg-gray-800 dark:text-white"
+                    className="bg-base-100 dark:bg-base-300 dark:text-base-600 dark:hover:bg-base-350 dark:hover:text-base-100 hover:bg-base-300 mx-2 inline-block w-fit items-center gap-2 rounded-lg p-2 text-sm text-gray-900 shadow-sm transition-all duration-300 hover:cursor-pointer"
                     onClick={() => {
                       if (user != privateChatName && isPrivateChatOpen) {
                         setPrivateChatName(user);
@@ -547,7 +553,7 @@ export default function Home() {
                     }}
                   >
                     <div>
-                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                      <span className="mr-4 inline-block h-2 w-2 rounded-full bg-green-500 dark:bg-lime-500"></span>
                       {user}
                     </div>
                   </li>
@@ -555,14 +561,14 @@ export default function Home() {
               </ul>
             )}
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="bg-base-200 flex flex-col items-center gap-2 pb-4">
               <div className="text-sm text-black/50">1/1</div>
               <div className="flex justify-center">
-                <div className="flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-white px-3 text-sm font-bold text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                <div className="bg-base-100 dark:bg-base-350 dark:border-base-350 dark:text-base-100 dark:hover:bg-base-500 dark:hover:border-base-500 flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 px-3 text-sm font-bold text-gray-500 transition-all duration-300 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white">
                   {"<"}
                 </div>
 
-                <div className="ms-3 flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-white px-3 text-sm font-bold text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                <div className="bg-base-100 dark:bg-base-350 dark:border-base-350 dark:text-base-100 dark:hover:bg-base-500 dark:hover:border-base-500 ms-3 flex h-8 items-center justify-center rounded-lg border-2 border-r-4 border-b-4 border-black/80 px-3 text-sm font-bold text-gray-500 transition-all duration-300 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white">
                   {">"}
                 </div>
               </div>
@@ -570,14 +576,14 @@ export default function Home() {
           </div>
         </div>
         <div
-          className={`flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 py-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "w-[50vw]" : "w-[70vw]"} `}
+          className={`bg-base-300 dark:bg-base-400 flex flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 py-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "w-[50vw]" : "w-[70vw]"} `}
         >
           <div className="flex-1">
-            <h1 className="mb-4 ml-8 text-start text-xl font-semibold text-gray-900/80 dark:text-white">
+            <h1 className="dark:text-base-100 mb-4 ml-8 text-start text-xl font-semibold text-gray-900/80">
               Room: {currentRoom}
             </h1>
 
-            <div className="mb-4 h-[60vh] overflow-y-auto bg-orange-100 p-4 dark:border-gray-600 dark:bg-gray-700">
+            <div className="bg-base-200 dark:bg-base-200 mb-4 h-[60vh] overflow-y-auto px-4 transition-all duration-1000">
               {currentRoom == "PublicRoom"
                 ? messages.map((message, index) => (
                     <div key={index} className="w-full">
@@ -588,7 +594,7 @@ export default function Home() {
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
                                 11:42
                               </span>
-                              <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              <p className="bg-base-300 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                                 {message.message}
                               </p>
                             </div>
@@ -605,12 +611,12 @@ export default function Home() {
                           />
                           <div className="flex w-full max-w-[320px] flex-col gap-1">
                             <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                              <span className="text-sm font-bold text-gray-700 dark:text-white">
+                              <span className="dark:text-base-1000 text-sm font-bold text-gray-700">
                                 {message.senderName}
                               </span>
                             </div>
                             <div className="flex flex-row gap-2">
-                              <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              <p className="bg-base-100 dark:bg-base-300 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white">
                                 {message.message}
                               </p>
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
@@ -632,7 +638,7 @@ export default function Home() {
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
                                 11:42
                               </span>
-                              <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              <p className="bg-base-100 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                                 {message.message}
                               </p>
                             </div>
@@ -654,7 +660,7 @@ export default function Home() {
                               </span>
                             </div>
                             <div className="flex flex-row gap-2">
-                              <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                              <p className="bg-base-100 dark:bg-base-300 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white">
                                 {message.message}
                               </p>
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
@@ -672,7 +678,7 @@ export default function Home() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="text-md ml-10 flex-1 rounded-lg border-none bg-amber-50/60 py-2 pr-2 pl-2 text-gray-900 focus:ring-0 focus:outline-none"
+                className="text-md bg-base-100 ml-10 flex-1 rounded-lg border-none py-2 pr-2 pl-2 text-gray-900 transition-all duration-1000 focus:ring-0 focus:outline-none"
                 placeholder="Type your message..."
               />
               <button
@@ -686,7 +692,7 @@ export default function Home() {
                   onClick={() => {
                     leavePublicRoomId(currentRoom);
                   }}
-                  className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white"
+                  className="bg-base-350 hover:bg-base-200 dark:bg-base-300 dark:hover:bg-base-200 dark:hover:text-base-1000 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:cursor-pointer"
                 >
                   Leave
                 </button>
@@ -705,9 +711,9 @@ export default function Home() {
                 {(currentRoomUsers ?? []).map((user, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-2 rounded-lg bg-gray-100 p-2 text-xs text-gray-900 shadow-sm dark:bg-gray-800 dark:text-white"
+                    className="bg-base-100 dark:bg-base-300 flex items-center gap-2 rounded-lg p-2 text-xs text-gray-900 shadow-sm dark:text-white"
                   >
-                    <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                    <span className="inline-block h-2 w-2 rounded-full bg-green-500 dark:bg-lime-500"></span>
                     {user.username} {user.username == me ? "(me)" : ""}
                   </li>
                 ))}
@@ -717,13 +723,13 @@ export default function Home() {
         </div>
 
         <div
-          className={`absolute right-8 flex w-[20vw] flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 bg-amber-800/40 p-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "translate-x-0" : "translate-x-96"}`}
+          className={`bg-base-300 dark:bg-base-400 absolute right-8 flex w-[20vw] flex-row gap-4 rounded-lg border-2 border-r-4 border-b-4 border-black/80 p-4 transition-all duration-500 ease-in-out ${isPrivateChatOpen ? "translate-x-0" : "translate-x-96"}`}
         >
           <div className="w-full">
-            <div className="mb-4 flex flex-row items-center justify-between text-center font-bold text-gray-900 dark:text-white">
+            <div className="dark:text-base-100 mb-4 flex flex-row items-center justify-between text-center font-bold text-gray-900">
               <div className="text-md ml-4">Chat with {privateChatName}</div>
               <span
-                className="flex w-fit flex-row justify-end rounded-lg bg-red-700/80 p-2 text-white hover:cursor-pointer hover:bg-red-600/90"
+                className="dark:bg-base-300 dark:hover:dark:bg-base-200 bg-base-400 hover:bg-base-350 flex w-fit flex-row justify-end rounded-lg p-2 text-white hover:cursor-pointer"
                 onClick={() => {
                   setIsPrivateChatOpen(false);
                 }}
@@ -731,7 +737,7 @@ export default function Home() {
                 <RxCross2 />
               </span>
             </div>
-            <div className="mb-4 h-[60vh] overflow-y-auto rounded-lg border bg-orange-100 p-4 dark:border-gray-600 dark:bg-gray-700">
+            <div className="bg-base-200 dark:bg-base-200 mb-4 h-[60vh] overflow-y-auto rounded-lg border px-2 transition-all duration-1000">
               {(privateChat?.get(privateChatName) ?? []).map(
                 (message, index) => (
                   <div key={index} className="w-full">
@@ -742,7 +748,7 @@ export default function Home() {
                             <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
                               11:42
                             </span>
-                            <p className="rounded-lg rounded-tr-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                            <p className="bg-base-300 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                               {message.message}
                             </p>
                           </div>
@@ -764,7 +770,7 @@ export default function Home() {
                             </span>
                           </div>
                           <div className="flex flex-row gap-2">
-                            <p className="rounded-lg rounded-tl-none border-1 border-black/80 bg-gray-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 dark:bg-gray-700 dark:text-white">
+                            <p className="bg-base-100 dark:bg-base-300 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white">
                               {message.message}
                             </p>
                             <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
@@ -784,7 +790,7 @@ export default function Home() {
                 type="text"
                 value={input2}
                 onChange={(e) => setInput2(e.target.value)}
-                className="flex-1 rounded-lg border-none bg-amber-50/60 py-2 pr-2 pl-2 text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                className="bg-base-100 flex-1 rounded-lg border-none py-2 pr-2 pl-2 text-sm text-gray-900 transition-all duration-1000 focus:ring-0 focus:outline-none"
                 placeholder="Type your message..."
               />
               <button

@@ -4,3 +4,21 @@
 @source "../.flowbite-react/class-list.json";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-base-100: #f7dae7;
+    --color-base-200: #e2b4c1;
+    --color-base-300: #d38c9d;
+    --color-base-350: #a55166;
+    --color-base-400: #a35c6e;
+    --color-base-500: #5a3735;
+    --color-base-600: #3e3333;
+    --color-base-700: #292928;
+    --color-base-800: #162a40;
+    --color-base-900: #4a262f;
+    --color-base-1000: #392237;
+    --color-base-1100: #250c16;
+    --color-background1: url('/background6.webp');
+    --color-background2: url('/background2.webp');
+
+}
