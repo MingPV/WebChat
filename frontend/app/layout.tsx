@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ThemeModeScript />
+        <ThemeModeScript defaultMode="light" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden overflow-y-hidden font-mono antialiased`}
