@@ -17,7 +17,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // เชื่อมต่อกับเซิร์ฟเวอร์ socket
-    const newSocket = io("http://localhost:8080"); // เปลี่ยน URL ตาม backend
+    const newSocket = io("http://localhost:8080", { autoConnect: false }); // เปลี่ยน URL ตาม backend
+    newSocket.connect();
     socketRef.current = newSocket;
     setSocket(newSocket);
 

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DarkThemeToggle } from "flowbite-react";
 import { Message } from "@/types/message";
 import { useSocket } from "../contexts/SocketContext";
@@ -29,14 +29,17 @@ export default function Home() {
   const [isJoined, setIsJoined] = useState(false);
   const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
 
+  //   const chatRef = useRef<HTMLDivElement>(null);
+  //   const privateChatRef = useRef<HTMLDivElement>(null);
+  const bottomChatRef = useRef<HTMLDivElement>(null);
+  const bottomPrivateChatRef = useRef<HTMLDivElement>(null);
+
   const [isCreateRoom, setIsCreateRoom] = useState(false);
   const [isSelectedRoomList, setIsSelectedRoomList] = useState(false);
 
   const [privateChatName, setPrivateChatName] = useState("");
 
   const [privateChat, setPrivateChat] = useState<Map<string, Message[]>>();
-  const [privateChat_mySent, setPrivateChat_mySent] =
-    useState<Map<string, Message[]>>();
 
   const [groupName, setGroupName] = useState("");
   const [joinName, setJoinName] = useState("");
@@ -48,6 +51,99 @@ export default function Home() {
     if (!socket) {
       return;
     }
+    const handleSetUserList = (usernames: string[]) => {
+      setUsers(usernames);
+    };
+
+    const handleReceivePrivateMessage = ({
+      from,
+      message,
+      sender,
+      createdAt,
+    }: {
+      from: string;
+      message: string;
+      sender: string;
+      createdAt: Date;
+    }) => {
+      console.log(`ได้ข้อความจาก ${from}: ${message} sender : ${sender}`);
+
+      const newMessage: Message = {
+        _id: "message.id",
+        roomId: "no roomId",
+        sender: "senderId",
+        senderName: sender,
+        message,
+        createdAt,
+      };
+
+      setPrivateChat((prev) => {
+        const updatedChat = new Map(prev);
+        const existingMessages = updatedChat.get(sender) || [];
+        updatedChat.set(sender, [...existingMessages, newMessage]);
+        console.log("updatedChat", updatedChat);
+        return updatedChat;
+      });
+    };
+
+    const handleSetAllRooms = (roomList: any[]) => {
+      // eslint-disable-next-line prefer-const
+      let roomList2: any[] = [];
+      console.log("roomList", roomList);
+      if (roomList) {
+        roomList.forEach((room: any) => {
+          if (room.roomId.startsWith("PublicGroup")) {
+            roomList2.push(room);
+          }
+          if (room.roomId == currentRoom && room.roomId != "PublicRoom") {
+            setCurrentRoomUsers(room.members);
+          }
+        });
+      }
+      console.log("roomList2", roomList2);
+
+      setRooms(roomList2);
+    };
+
+    const handleSetRoomMembers = ({
+      roomId,
+      members,
+    }: {
+      roomId: string;
+      members: any[];
+    }) => {
+      console.log(`สมาชิกในห้อง ${roomId}:`, members);
+      setCurrentRoomUsers(members);
+    };
+
+    const handleReveiveMessage = ({
+      roomId,
+      message,
+      sender,
+      createdAt,
+      senderName,
+    }: {
+      roomId: string;
+      message: string;
+      sender: string;
+      createdAt: Date;
+      senderName: string;
+    }) => {
+      const newMessage: Message = {
+        _id: "message.id",
+        roomId,
+        sender,
+        senderName,
+        message,
+        createdAt,
+      };
+
+      if (roomId == "PublicRoom") {
+        setMessages((prev) => [...prev, newMessage]);
+      } else {
+        setCurrentRoomMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    };
 
     const handleConnect = () => {
       console.log("✅ Socket connected:", socket.id);
@@ -60,86 +156,6 @@ export default function Home() {
       });
 
       console.log("ming1235");
-
-      socket.on("user-list", (usernames: string[]) => {
-        setUsers(usernames);
-      });
-
-      socket.on(
-        "receive_private_message",
-        ({ from, message, sender, createdAt }) => {
-          console.log(`ได้ข้อความจาก ${from}: ${message} sender : ${sender}`);
-
-          const newMessage: Message = {
-            _id: "message.id",
-            roomId: "no roomId",
-            sender: "senderId",
-            senderName: sender,
-            message,
-            createdAt,
-          };
-
-          setPrivateChat((prev) => {
-            const updatedChat = new Map(prev);
-            const existingMessages = updatedChat.get(sender) || [];
-            updatedChat.set(sender, [...existingMessages, newMessage]);
-            console.log("updatedChat", updatedChat);
-            return updatedChat;
-          });
-
-          //   setCurrentRoomMessages((prevMessages) => [
-          //     ...prevMessages,
-          //     newMessage,
-          //   ]);
-        },
-      );
-
-      socket.on("all_rooms", (roomList: any[]) => {
-        // eslint-disable-next-line prefer-const
-        let roomList2: any[] = [];
-        console.log("roomList", roomList);
-        if (roomList) {
-          roomList.forEach((room: any) => {
-            if (room.roomId.startsWith("PublicGroup")) {
-              roomList2.push(room);
-            }
-            if (room.roomId == currentRoom && room.roomId != "PublicRoom") {
-              setCurrentRoomUsers(room.members);
-            }
-          });
-        }
-        console.log("roomList2", roomList2);
-
-        setRooms(roomList2);
-      });
-
-      socket.on("room_members", ({ roomId, members }) => {
-        console.log(`สมาชิกในห้อง ${roomId}:`, members);
-        setCurrentRoomUsers(members);
-      });
-
-      socket.on(
-        "receive_message",
-        ({ roomId, message, sender, createdAt, senderName }) => {
-          const newMessage: Message = {
-            _id: "message.id",
-            roomId,
-            sender,
-            senderName,
-            message,
-            createdAt,
-          };
-
-          if (roomId == "PublicRoom") {
-            setMessages((prev) => [...prev, newMessage]);
-          } else {
-            setCurrentRoomMessages((prevMessages) => [
-              ...prevMessages,
-              newMessage,
-            ]);
-          }
-        },
-      );
 
       const fetchMessagesByRoomId = async (roomId: string) => {
         try {
@@ -197,6 +213,12 @@ export default function Home() {
         }
       };
 
+      socket.on("user-list", handleSetUserList);
+      socket.on("receive_private_message", handleReceivePrivateMessage);
+      socket.on("all_rooms", handleSetAllRooms);
+      socket.on("room_members", handleSetRoomMembers);
+      socket.on("receive_message", handleReveiveMessage);
+
       fetchUserData();
       fetchMessagesByRoomId("PublicRoom");
       setIsLoading(false);
@@ -207,6 +229,14 @@ export default function Home() {
     } else {
       socket.once("connect", handleConnect);
     }
+
+    return () => {
+      socket.off("user-list", handleSetUserList);
+      socket.off("receive_private_message", handleReceivePrivateMessage);
+      socket.off("all_rooms", handleSetAllRooms);
+      socket.off("room_members", handleSetRoomMembers);
+      socket.off("receive_message", handleReveiveMessage);
+    };
   }, [socket]);
 
   const createMessageByRoomId = async (
@@ -400,15 +430,6 @@ export default function Home() {
         createdAt: new Date(),
       };
 
-      //   const newMessage: Message = {
-      //     _id: "message.id",
-      //     roomId: "no roomId",
-      //     sender: "senderId",
-      //     senderName: sender,
-      //     message,
-      //     createdAt,
-      //   };
-
       setPrivateChat((prev) => {
         const updatedChat = new Map(prev);
         const existingMessages = updatedChat.get(sendTo) || [];
@@ -416,16 +437,33 @@ export default function Home() {
         console.log("updatedChat", updatedChat);
         return updatedChat;
       });
-
-      //   setPrivateChat_mySent((prev) => {
-      //     const updatedChat = new Map(prev);
-      //     const existingMessages = updatedChat.get(sendTo) || [];
-      //     updatedChat.set(sendTo, [...existingMessages, newMessage]);
-      //     console.log("updatedChat_mySent", updatedChat);
-      //     return updatedChat;
-      //   });
     }
   };
+
+  useEffect(() => {
+    if (currentRoom == "PublicRoom") {
+      //   if (chatRef.current) {
+      //     chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      //   }
+      bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    // if (chatRef.current) {
+    //   chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    // }
+    bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [currentRoomMessages]);
+
+  useEffect(() => {
+    // if (privateChatRef.current) {
+    //   privateChatRef.current.scrollTop = privateChatRef.current.scrollHeight;
+    // }
+    if (isPrivateChatOpen) {
+      bottomPrivateChatRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [privateChat]);
 
   if (!socket || isLoading) return <p>🔄 Connecting to chat server...</p>;
 
@@ -544,6 +582,10 @@ export default function Home() {
                     key={index}
                     className="bg-base-100 dark:bg-base-300 dark:text-base-600 dark:hover:bg-base-350 dark:hover:text-base-100 hover:bg-base-300 mx-2 inline-block w-fit items-center gap-2 rounded-lg p-2 text-sm text-gray-900 shadow-sm transition-all duration-300 hover:cursor-pointer"
                     onClick={() => {
+                      if (user == me) {
+                        alert("you can't direct message to yourself.");
+                        return;
+                      }
                       if (user != privateChatName && isPrivateChatOpen) {
                         setPrivateChatName(user);
                         return;
@@ -672,6 +714,7 @@ export default function Home() {
                       )}
                     </div>
                   ))}
+              <div ref={bottomChatRef} />
             </div>
             <div className="flex items-center gap-2">
               <input
@@ -783,6 +826,7 @@ export default function Home() {
                   </div>
                 ),
               )}
+              <div ref={bottomPrivateChatRef} />
             </div>
 
             <div className="flex items-center gap-2">
