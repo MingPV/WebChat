@@ -107,7 +107,35 @@ function HomePage() {
     });
 
     fetchUserData();
-  }, [socket, friends]);
+  }, [socket]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      if (!userData?._id) return;
+
+      try {
+        const response = await fetch(
+          `${backend_url}/friends/userId/${userData._id}`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          // console.log(response);
+          throw new Error("Failed to fetch friends");
+        }
+
+        const { data: friendsData } = await response.json();
+        setFriends(friendsData); // <-- store in state
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    fetchFriends();
+  }, [friends]); // Run only when data._id changes
 
   const handleSignOut = async () => {
     try {
@@ -199,7 +227,13 @@ function HomePage() {
     }
 
     if (friendName == userData?.username) {
-      console.log("You cannot add yourself as a friend");
+      alert("You cannot add yourself as a friend");
+      return;
+    }
+
+    const alreadyFriend = friends.some((f) => f.friend_name === friendName);
+    if (alreadyFriend) {
+      alert(`${friendName} is already your friend.`);
       return;
     }
 
@@ -252,7 +286,7 @@ function HomePage() {
   if (!socket) return <p>🔄 Connecting to chat server...</p>;
 
   return (
-    <main className="bg-base-100 dark:bg-base-950 flex min-h-screen flex-col items-center justify-center px-4 py-24">
+    <main className="bg-base-100 dark:bg-base-900 flex min-h-screen flex-col items-center justify-center px-4 py-24">
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
@@ -441,33 +475,34 @@ function HomePage() {
                   <p className="bg-base-400 mb-2 p-2 font-bold transition-all duration-1000 dark:text-white">
                     Friend Requests
                   </p>
-                  {friends.map(
-                    (friend) =>
-                      friend.status == "waiting for accept" && (
-                        <div
-                          key={friend._id}
-                          className="bg-base-100 dark:bg-base-300 m-2 mb-2 flex flex-row items-center justify-between gap-2 rounded-md px-4 py-2 transition-all duration-1000"
-                        >
-                          <div className="flex-1">{friend.friend_name}</div>
+                  {friends &&
+                    friends?.map(
+                      (friend) =>
+                        friend.status == "waiting for accept" && (
                           <div
-                            className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-lime-500"
-                            onClick={() =>
-                              handleAcceptFriend(friend._id, friend.friend_id)
-                            }
+                            key={friend._id}
+                            className="bg-base-100 dark:bg-base-300 m-2 mb-2 flex flex-row items-center justify-between gap-2 rounded-md px-4 py-2 transition-all duration-1000"
                           >
-                            <FaCircleCheck />
+                            <div className="flex-1">{friend.friend_name}</div>
+                            <div
+                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-lime-500"
+                              onClick={() =>
+                                handleAcceptFriend(friend._id, friend.friend_id)
+                              }
+                            >
+                              <FaCircleCheck />
+                            </div>
+                            <div
+                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-red-700"
+                              onClick={() =>
+                                handleRejectFriend(friend._id, friend.friend_id)
+                              }
+                            >
+                              <FaCircleXmark />
+                            </div>
                           </div>
-                          <div
-                            className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-red-500"
-                            onClick={() =>
-                              handleRejectFriend(friend._id, friend.friend_id)
-                            }
-                          >
-                            <FaCircleXmark />
-                          </div>
-                        </div>
-                      ),
-                  )}
+                        ),
+                    )}
                 </div>
               </div>
             </div>

@@ -177,10 +177,10 @@ export default function ChatCard({ room, myData }: Props) {
                   // chat card start herte
                   <div className="bg-base-200 flex h-full w-full flex-col rounded-lg shadow-md">
                     <div className="flex-1 space-y-2 overflow-y-auto">
-                      <h1 className="dark:text-base-100 text-md bg-base-400 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000 dark:text-white">
+                      <h1 className="dark:text-base-100 text-md bg-base-400 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000">
                         {roomName}
                       </h1>
-                      <div className="bg-base-300 dark:bg-base-300 mb-4 overflow-y-auto px-4 transition-all duration-1000">
+                      <div className="mb-4 overflow-y-auto px-4 transition-all duration-1000">
                         {messages?.map((message, index) => (
                           <div key={index} className="w-full">
                             {message.sender == myData._id ? (

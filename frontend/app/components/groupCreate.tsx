@@ -182,7 +182,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
                           <button
                             onClick={() => removeMember(name, members_id[idx])}
-                            className="ml-2 text-red-500 hover:text-red-700"
+                            className="ml-2 text-red-700 transition-all duration-500 hover:text-red-900 dark:text-red-900 dark:hover:text-red-700"
                           >
                             <IoTrashBin />
                           </button>
