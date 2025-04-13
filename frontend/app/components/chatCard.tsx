@@ -5,6 +5,8 @@ import { Room } from "@/types/room";
 import { User } from "@/types/user";
 import React, { useEffect, useState } from "react";
 import { useSocket } from "../contexts/SocketContext";
+import Image from "next/image";
+import { LuSend } from "react-icons/lu";
 
 type Props = { room: Room; myData: User };
 
@@ -16,9 +18,12 @@ export default function ChatCard({ room, myData }: Props) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false);
+  const [roomName, setRoomName] = useState("");
 
   useEffect(() => {
     // Initialize socket connection
+    console.log(room);
+    setRoomName(room.name.split(" ").pop() || "");
 
     if (!socket) {
       console.log("mingza");
@@ -112,6 +117,14 @@ export default function ChatCard({ room, myData }: Props) {
     }
   };
 
+  const convertTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const day = date.toLocaleDateString("en-US", { weekday: "short" });
+    return `${hours}:${minutes}`;
+  };
+
   const sendMessage = async (message: string) => {
     if (input.trim() === "") return;
 
@@ -149,43 +162,76 @@ export default function ChatCard({ room, myData }: Props) {
 
   return (
     <>
-      <div
-        key={room._id}
-        className="flex w-full flex-row gap-2 border-b bg-slate-300"
-      >
-        <div className="flex w-full flex-row">
-          <div className="m-6 w-full">
+      <div key={room._id} className="flex h-full w-full flex-row gap-2">
+        <div className="flex h-full w-full flex-row">
+          <div className="h-full w-full">
             {isOpen && (
-              <div className="flex w-full flex-col gap-2">
+              <div className="flex h-full w-full flex-col gap-2">
                 {isLoading ? (
                   <div>Loading...</div>
                 ) : (
-                  // chat card start here
-                  <div className="flex h-[40vh] w-full max-w-lg flex-col rounded-2xl border bg-white shadow-md">
-                    <div className="flex-1 space-y-2 overflow-y-auto p-4">
-                      {messages?.map((msg, idx) => {
-                        const isMe = msg.sender === myData._id;
-                        return (
-                          <div
-                            key={idx}
-                            className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-                          >
-                            <div
-                              className={`max-w-xs rounded-2xl px-4 py-2 ${
-                                isMe
-                                  ? "rounded-br-none bg-blue-500 text-white"
-                                  : "rounded-bl-none bg-gray-200 text-black"
-                              }`}
-                            >
-                              {msg.message}
-                            </div>
+                  // chat card start herte
+                  <div className="flex h-full w-full flex-col rounded-lg bg-orange-200 shadow-md">
+                    <div className="flex-1 space-y-2 overflow-y-auto">
+                      <h1 className="dark:text-base-100 text-md rounded-t-lg bg-orange-400 p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000 dark:text-white">
+                        {roomName}
+                      </h1>
+                      <div className="bg-base-300 dark:bg-base-300 mb-4 overflow-y-auto px-4 transition-all duration-1000">
+                        {messages?.map((message, index) => (
+                          <div key={index} className="w-full">
+                            {message.sender == myData._id ? (
+                              <div className="my-4 flex w-full justify-end gap-2.5">
+                                <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
+                                  <div className="flex flex-row gap-2">
+                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                      {convertTime(
+                                        message.createdAt.toString(),
+                                      )}
+                                    </span>
+                                    <p className="dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 bg-orange-400 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:bg-orange-100">
+                                      {message.message}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="my-4 flex items-start gap-2.5">
+                                <Image
+                                  className="h-10 w-10 rounded-full"
+                                  src="/profile1.png"
+                                  alt="Jese image"
+                                  width={48}
+                                  height={48}
+                                />
+                                <div className="flex w-full max-w-[320px] flex-col gap-1">
+                                  <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                                    <span className="dark:text-base-1000 text-sm font-bold text-gray-700">
+                                      {message.senderName}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-row gap-2">
+                                    <p
+                                      className={`rounded-lg rounded-tl-none border-1 border-black/80 bg-orange-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:bg-orange-400 dark:text-white`}
+                                    >
+                                      {message.message}
+                                    </p>
+                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                      {convertTime(
+                                        message.createdAt.toString(),
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        );
-                      })}
+                          // {message.senderName}
+                        ))}
+                      </div>
                     </div>
 
                     {/* input and send button */}
-                    <div className="flex items-center gap-2 border-t p-3">
+                    <div className="flex items-center gap-2 rounded-b-md bg-orange-400 p-3">
                       <input
                         type="text"
                         value={input}
@@ -193,14 +239,14 @@ export default function ChatCard({ room, myData }: Props) {
                         onKeyDown={(e) =>
                           e.key === "Enter" && handleSendMessage
                         }
-                        placeholder="พิมพ์ข้อความ..."
-                        className="flex-1 rounded-full border px-3 py-2 focus:outline-none"
+                        placeholder="Type your message..."
+                        className="flex-1 rounded-lg bg-orange-100 px-3 py-2 focus:outline-none"
                       />
                       <button
                         onClick={handleSendMessage}
-                        className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                        className="text-xl text-black/70 hover:text-black"
                       >
-                        ส่ง
+                        <LuSend />
                       </button>
                     </div>
                   </div>
