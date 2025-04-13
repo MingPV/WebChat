@@ -103,10 +103,10 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
   };
 
   return (
-    <div className="h-full space-y-4 rounded-lg bg-orange-200">
+    <div className="bg-base-200 h-full space-y-4 rounded-lg">
       <div className="flex h-full flex-col justify-between">
         <div className="flex h-full flex-col gap-2">
-          <h2 className="text-md rounded-t-md bg-orange-400 p-2 font-bold transition-all duration-1000 dark:text-white">
+          <h2 className="text-md bg-base-400 rounded-t-md p-2 font-bold transition-all duration-1000 dark:text-white">
             Create new group
           </h2>
 
@@ -116,7 +116,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
             </label>
             <input
               type="text"
-              className="w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               placeholder="ex. Raider group"
@@ -125,7 +125,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
           <div className="flex items-center gap-2 px-4">
             <select
-              className="w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
               value={memberName}
               onChange={(e) => {
                 setMemberName(e.target.value);
@@ -149,7 +149,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
             </select>
             <button
               onClick={addMember}
-              className="rounded-lg bg-orange-400 px-4 py-2 text-white transition duration-1000 hover:bg-orange-600 dark:bg-orange-500"
+              className="bg-base-400 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
             >
               Add
             </button>
@@ -169,7 +169,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
                       idx > 0 && (
                         <li
                           key={idx}
-                          className="flex items-center justify-between rounded-md bg-orange-100 px-2 py-1 transition-all duration-1000 dark:bg-orange-300"
+                          className="bg-base-100 dark:bg-base-300 flex items-center justify-between rounded-md px-2 py-1 transition-all duration-1000"
                         >
                           <p>
                             {idx}
@@ -194,7 +194,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
         <button
           onClick={createGroup}
-          className="m-4 rounded-lg bg-orange-400 py-2 text-white transition duration-1000 hover:bg-orange-600 dark:bg-orange-500"
+          className="bg-base-400 hover:bg-base-600 dark:bg-base-500 m-4 rounded-lg py-2 text-white transition duration-1000"
         >
           Create group
         </button>

@@ -250,7 +250,7 @@ function HomePage() {
   if (!socket) return <p>🔄 Connecting to chat server...</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-orange-100 px-4 py-24 dark:bg-orange-950">
+    <main className="bg-base-100 dark:bg-base-950 flex min-h-screen flex-col items-center justify-center px-4 py-24">
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
@@ -263,8 +263,8 @@ function HomePage() {
               onClick={() => setTab("chat")}
               className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
                 tab === "chat"
-                  ? "bg-orange-400 dark:bg-orange-600"
-                  : "bg-orange-200 dark:bg-orange-400"
+                  ? "bg-base-400 dark:bg-base-600"
+                  : "bg-base-200 dark:bg-base-400"
               }`}
             >
               Chat
@@ -275,8 +275,8 @@ function HomePage() {
               onClick={() => setTab("friends")}
               className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
                 tab === "friends"
-                  ? "bg-orange-400 dark:bg-orange-600"
-                  : "bg-orange-200 dark:bg-orange-400"
+                  ? "bg-base-400 dark:bg-base-600"
+                  : "bg-base-200 dark:bg-base-400"
               }`}
             >
               Friends
@@ -300,29 +300,29 @@ function HomePage() {
       <div className="flex h-[60vh] w-[70vw] items-start justify-between rounded-2xl">
         {tab === "chat" && (
           <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
-            <div className="flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4 bg-orange-200">
-              <div className="text-md rounded-md rounded-b-none bg-orange-400 p-2 font-bold transition-all duration-1000 dark:text-white">
+            <div className="bg-base-200 flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4">
+              <div className="text-md bg-base-400 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
                 Friends
               </div>
               {isLoading ? (
                 <div className="flex flex-col gap-2 text-sm">
                   <p
-                    className={`skeleton mx-2 w-64 rounded-lg bg-orange-100 p-2`}
+                    className={`skeleton bg-base-100 mx-2 w-64 rounded-lg p-2`}
                   >
                     Loading...
                   </p>
                   <p
-                    className={`skeleton mx-2 w-64 rounded-lg bg-orange-100 p-2`}
+                    className={`skeleton bg-base-100 mx-2 w-64 rounded-lg p-2`}
                   >
                     Loading...
                   </p>
                   <p
-                    className={`skeleton mx-2 w-64 rounded-lg bg-orange-100 p-2`}
+                    className={`skeleton bg-base-100 mx-2 w-64 rounded-lg p-2`}
                   >
                     Loading...
                   </p>
                   <p
-                    className={`skeleton mx-2 w-64 rounded-lg bg-orange-100 p-2`}
+                    className={`skeleton bg-base-100 mx-2 w-64 rounded-lg p-2`}
                   >
                     Loading...
                   </p>
@@ -335,8 +335,8 @@ function HomePage() {
                         key={room._id}
                         className={`mx-2 w-64 rounded-lg p-2 text-sm transition ${
                           chatCardInfo?.key === room._id
-                            ? "bg-orange-300"
-                            : "bg-orange-100"
+                            ? "bg-base-300"
+                            : "bg-base-100"
                         } `}
                         onClick={() => {
                           setChatCardInfo({
@@ -367,7 +367,7 @@ function HomePage() {
                       or go to public chat here
                     </p>
                     <Link href="/publicChat">
-                      <button className="rounded-lg bg-orange-300 px-4 py-2 transition ease-out hover:bg-orange-400">
+                      <button className="bg-base-300 hover:bg-base-400 rounded-lg px-4 py-2 transition ease-out">
                         To Public Chat
                       </button>
                     </Link>
@@ -379,7 +379,7 @@ function HomePage() {
             </div>
             <div className="border-box h-full w-full rounded-lg border-2 border-r-4 border-b-4">
               {!chatCardInfo && (
-                <div className="flex h-full flex-col items-center justify-center gap-10 rounded-lg bg-orange-200 dark:bg-orange-300">
+                <div className="bg-base-200 dark:bg-base-300 flex h-full flex-col items-center justify-center gap-10 rounded-lg">
                   <p className="text-xl font-bold">start conversation</p>
                   <Image
                     src="/image.png"
@@ -411,21 +411,21 @@ function HomePage() {
               </div>
               <div className="col-span-1 flex h-full flex-col">
                 {/* Add Friend Section */}
-                <div className="w-full flex-none flex-col justify-center rounded-lg border-2 border-r-4 border-b-4 bg-orange-200">
-                  <div className="rounded-md rounded-b-none bg-orange-400 p-2 font-bold transition-all duration-1000 dark:text-white">
+                <div className="bg-base-200 w-full flex-none flex-col justify-center rounded-lg border-2 border-r-4 border-b-4">
+                  <div className="bg-base-400 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
                     Add friend by username
                   </div>
                   <div className="flex w-full flex-row items-center justify-center p-4">
                     <div className="flex w-full flex-row justify-between gap-2 p-2">
                       <input
                         type="text"
-                        className="w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
                         value={friendName}
                         placeholder="Enter friend's username..."
                         onChange={(e) => setFriendName(e.target.value)}
                       />
                       <div
-                        className="rounded-lg bg-orange-400 px-4 py-2 text-white transition duration-1000 hover:bg-orange-600 dark:bg-orange-500"
+                        className="bg-base-400 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
                         onClick={handleAddFriend}
                       >
                         Add
@@ -435,8 +435,8 @@ function HomePage() {
                 </div>
 
                 {/* Friend Requests List (takes remaining height) */}
-                <div className="mt-4 flex grow flex-col overflow-auto rounded-lg border-2 border-r-4 border-b-4 bg-orange-200">
-                  <p className="mb-2 bg-orange-400 p-2 font-bold transition-all duration-1000 dark:text-white">
+                <div className="bg-base-200 mt-4 flex grow flex-col overflow-auto rounded-lg border-2 border-r-4 border-b-4">
+                  <p className="bg-base-400 mb-2 p-2 font-bold transition-all duration-1000 dark:text-white">
                     Friend Requests
                   </p>
                   {friends.map(
@@ -444,7 +444,7 @@ function HomePage() {
                       friend.status == "waiting for accept" && (
                         <div
                           key={friend._id}
-                          className="m-2 mb-2 flex flex-row items-center justify-between gap-2 rounded-md bg-orange-100 px-4 py-2 transition-all duration-1000 dark:bg-orange-300"
+                          className="bg-base-100 dark:bg-base-300 m-2 mb-2 flex flex-row items-center justify-between gap-2 rounded-md px-4 py-2 transition-all duration-1000"
                         >
                           <div className="flex-1">{friend.friend_name}</div>
                           <div

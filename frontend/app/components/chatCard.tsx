@@ -171,9 +171,9 @@ export default function ChatCard({ room, myData }: Props) {
                   <div>Loading...</div>
                 ) : (
                   // chat card start herte
-                  <div className="flex h-full w-full flex-col rounded-lg bg-orange-200 shadow-md">
+                  <div className="bg-base-200 flex h-full w-full flex-col rounded-lg shadow-md">
                     <div className="flex-1 space-y-2 overflow-y-auto">
-                      <h1 className="dark:text-base-100 text-md rounded-t-lg bg-orange-400 p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000 dark:text-white">
+                      <h1 className="dark:text-base-100 text-md bg-base-400 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000 dark:text-white">
                         {roomName}
                       </h1>
                       <div className="bg-base-300 dark:bg-base-300 mb-4 overflow-y-auto px-4 transition-all duration-1000">
@@ -188,7 +188,7 @@ export default function ChatCard({ room, myData }: Props) {
                                         message.createdAt.toString(),
                                       )}
                                     </span>
-                                    <p className="dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 bg-orange-400 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:bg-orange-100">
+                                    <p className="dark:text-base-1000 bg-base-400 dark:bg-base-100 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000">
                                       {message.message}
                                     </p>
                                   </div>
@@ -211,7 +211,7 @@ export default function ChatCard({ room, myData }: Props) {
                                   </div>
                                   <div className="flex flex-row gap-2">
                                     <p
-                                      className={`rounded-lg rounded-tl-none border-1 border-black/80 bg-orange-100 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:bg-orange-400 dark:text-white`}
+                                      className={`bg-base-100 dark:bg-base-400 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white`}
                                     >
                                       {message.message}
                                     </p>
@@ -231,7 +231,7 @@ export default function ChatCard({ room, myData }: Props) {
                     </div>
 
                     {/* input and send button */}
-                    <div className="flex items-center gap-2 rounded-b-md bg-orange-400 p-3">
+                    <div className="bg-base-400 flex items-center gap-2 rounded-b-md p-3">
                       <input
                         type="text"
                         value={input}
@@ -240,7 +240,7 @@ export default function ChatCard({ room, myData }: Props) {
                           e.key === "Enter" && handleSendMessage
                         }
                         placeholder="Type your message..."
-                        className="flex-1 rounded-lg bg-orange-100 px-3 py-2 focus:outline-none"
+                        className="bg-base-100 flex-1 rounded-lg px-3 py-2 focus:outline-none"
                       />
                       <button
                         onClick={handleSendMessage}
