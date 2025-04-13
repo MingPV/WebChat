@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 // import Link from "next/link";
 
+const backend_url =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +23,7 @@ export default function Home() {
 
     // Call API to create account
     try {
-      const response = await fetch("http://localhost:8080/auth/sign-in", {
+      const response = await fetch(`${backend_url}/auth/sign-in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -44,6 +44,8 @@ export const authController = {
         })
       }
 
+      console.log('mingza')
+
       const { accessToken } = jwtSign(user.id)
 
       // Set the access token as a cookie in the response
