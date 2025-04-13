@@ -14,8 +14,9 @@ import { LuSend } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 
-const backend_url =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+// const backend_url =
+//   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+const backend_url = "https://webchat-production-41c2.up.railway.app";
 
 export default function Home() {
   const [userData, setUserData] = useState<User>();
