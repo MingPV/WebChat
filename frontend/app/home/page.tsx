@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -361,7 +362,7 @@ function HomePage() {
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center gap-4">
                     <p className="p-2 text-center">
-                      you don't have any friends, please add friends by{" "}
+                      you don&apos;t have any friends, please add friends by{" "}
                       <strong>
                         choose FRIENDS tab and fill their username
                       </strong>{" "}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Message } from "@/types/message";
@@ -124,7 +125,7 @@ export default function ChatCard({ room, myData }: Props) {
     const date = new Date(timestamp);
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
-    const day = date.toLocaleDateString("en-US", { weekday: "short" });
+    // const day = date.toLocaleDateString("en-US", { weekday: "short" });
     return `${hours}:${minutes}`;
   };
 
