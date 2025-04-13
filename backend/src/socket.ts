@@ -5,8 +5,8 @@ import type { Server as HttpServer } from 'http'
 export const initSocket = (server: HttpServer) => {
   const io = new Server(server, {
     cors: {
-      origin: 'http://localhost:3000'
-    }
+      origin: `${process.env.CLIENT_URL || 'http://localhost:3000'}`
+    } // only for test, need to change
   })
 
   const userMap = new Map<string, string>() // socket.id -> username

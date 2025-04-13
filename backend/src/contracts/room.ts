@@ -34,3 +34,5 @@
 // export interface DeleteProfilePayload {
 //   password: string
 // }
+
+export {}

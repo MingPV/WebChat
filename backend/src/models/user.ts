@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
-import { compareSync } from 'bcrypt'
+// import { compareSync } from 'bcrypt'
+import { compareSync } from 'bcryptjs'
 
 import { IUser, IUserMethods, UserModel } from '@/contracts/user'
 

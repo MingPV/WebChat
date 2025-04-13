@@ -14,6 +14,9 @@ import { LuSend } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
 
+const backend_url =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+
 export default function Home() {
   const [userData, setUserData] = useState<User>();
   const [rooms, setRooms] = useState<any[]>([]);
@@ -160,7 +163,7 @@ export default function Home() {
       const fetchMessagesByRoomId = async (roomId: string) => {
         try {
           const response = await fetch(
-            `http://localhost:8080/messages/roomId/${roomId}`,
+            `${backend_url}/messages/roomId/${roomId}`,
             {
               method: "GET",
               headers: {
@@ -188,7 +191,7 @@ export default function Home() {
 
       const fetchUserData = async () => {
         try {
-          const response = await fetch("http://localhost:8080/me", {
+          const response = await fetch(`${backend_url}/me`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -246,7 +249,7 @@ export default function Home() {
     senderName: string,
   ) => {
     try {
-      const response = await fetch(`http://localhost:8080/messages`, {
+      const response = await fetch(`${backend_url}/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
