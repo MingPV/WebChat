@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
+import { TbRefresh } from "react-icons/tb";
 import { Friend } from "@/types/friend";
 import { User } from "@/types/user";
 import { DarkThemeToggle } from "flowbite-react";
@@ -29,6 +29,7 @@ function HomePage() {
   const [rooms, setRooms] = useState<Room[]>();
   const [tab, setTab] = useState<string>("chat");
   const [isLoading, setIsLoading] = useState(true);
+  const [isClicked, setIsClicked] = useState(false);
 
   const { socket } = useSocket();
 
@@ -109,34 +110,6 @@ function HomePage() {
     fetchUserData();
   }, [socket]);
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      if (!userData?._id) return;
-
-      try {
-        const response = await fetch(
-          `${backend_url}/friends/userId/${userData._id}`,
-          {
-            method: "GET",
-            credentials: "include",
-          },
-        );
-
-        if (!response.ok) {
-          // console.log(response);
-          throw new Error("Failed to fetch friends");
-        }
-
-        const { data: friendsData } = await response.json();
-        setFriends(friendsData); // <-- store in state
-      } catch (error) {
-        console.error("Error fetching friends:", error);
-      }
-    };
-
-    fetchFriends();
-  }, [friends]); // Run only when data._id changes
-
   const handleSignOut = async () => {
     try {
       const response = await fetch(`${backend_url}/auth/sign-out`, {
@@ -180,6 +153,7 @@ function HomePage() {
       if (!response.ok) {
         throw new Error("Failed to accept friend request");
       }
+      fetchFriendsRefresh();
 
       console.log("Accept friend request successfully");
     } catch (error) {
@@ -212,6 +186,7 @@ function HomePage() {
       if (!response.ok) {
         throw new Error("Failed to reject friend request");
       }
+      fetchFriendsRefresh();
       console.log("Reject friend request successfully");
     } catch (error) {
       console.error(
@@ -285,6 +260,41 @@ function HomePage() {
 
   if (!socket) return <p>🔄 Connecting to chat server...</p>;
 
+  const fetchFriendsRefresh = () => {
+    // Reset animation first
+    setIsClicked(false);
+    setTimeout(() => {
+      setIsClicked(true); // this triggers the animation
+
+      setIsLoading(true);
+      fetch(`${backend_url}/friends/userId/${userData?._id}`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch friends");
+          }
+          return response.json();
+        })
+        .then(({ data }) => {
+          setFriends(data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+          );
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setTimeout(() => setIsClicked(false), 1000); // reset after animation ends
+        });
+    }, 50); // delay before re-enabling the animation
+  };
+
   return (
     <main className="bg-base-100 dark:bg-base-900 flex min-h-screen flex-col items-center justify-center px-4 py-24">
       <div className="absolute top-4 right-4">
@@ -299,8 +309,8 @@ function HomePage() {
               onClick={() => setTab("chat")}
               className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
                 tab === "chat"
-                  ? "bg-base-400 dark:bg-base-600"
-                  : "bg-base-200 dark:bg-base-400"
+                  ? "bg-base-300 dark:bg-base-600"
+                  : "bg-base-200 dark:bg-base-300"
               }`}
             >
               Chat
@@ -311,8 +321,8 @@ function HomePage() {
               onClick={() => setTab("friends")}
               className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
                 tab === "friends"
-                  ? "bg-base-400 dark:bg-base-600"
-                  : "bg-base-200 dark:bg-base-400"
+                  ? "bg-base-300 dark:bg-base-600"
+                  : "bg-base-200 dark:bg-base-300"
               }`}
             >
               Friends
@@ -337,7 +347,7 @@ function HomePage() {
         {tab === "chat" && (
           <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
             <div className="bg-base-200 flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4">
-              <div className="text-md bg-base-400 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
+              <div className="text-md bg-base-300 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
                 Friends
               </div>
               {isLoading ? (
@@ -403,7 +413,7 @@ function HomePage() {
                       or go to public chat here
                     </p>
                     <Link href="/publicChat">
-                      <button className="bg-base-300 hover:bg-base-400 rounded-lg px-4 py-2 transition ease-out">
+                      <button className="bg-base-300 hover:bg-base-300 rounded-lg px-4 py-2 transition ease-out">
                         To Public Chat
                       </button>
                     </Link>
@@ -448,7 +458,7 @@ function HomePage() {
               <div className="col-span-1 flex h-full flex-col">
                 {/* Add Friend Section */}
                 <div className="bg-base-200 w-full flex-none flex-col justify-center rounded-lg border-2 border-r-4 border-b-4">
-                  <div className="bg-base-400 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
+                  <div className="bg-base-300 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
                     Add friend by username
                   </div>
                   <div className="flex w-full flex-row items-center justify-center p-4">
@@ -461,7 +471,7 @@ function HomePage() {
                         onChange={(e) => setFriendName(e.target.value)}
                       />
                       <div
-                        className="bg-base-400 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
+                        className="bg-base-300 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
                         onClick={handleAddFriend}
                       >
                         Add
@@ -472,9 +482,19 @@ function HomePage() {
 
                 {/* Friend Requests List (takes remaining height) */}
                 <div className="bg-base-200 mt-4 flex grow flex-col overflow-auto rounded-lg border-2 border-r-4 border-b-4">
-                  <p className="bg-base-400 mb-2 p-2 font-bold transition-all duration-1000 dark:text-white">
-                    Friend Requests
-                  </p>
+                  <div className="bg-base-300 flex w-full flex-row items-center justify-between dark:text-white">
+                    <p className="mb-2 p-2 font-bold transition-all duration-1000">
+                      Friend Requests
+                    </p>
+                    <button
+                      className={`hover:text-base-500 px-4 text-2xl font-bold transition-transform duration-500 ${
+                        isClicked ? "rotate-360" : "rotate-0"
+                      }`}
+                      onClick={fetchFriendsRefresh}
+                    >
+                      <TbRefresh />
+                    </button>
+                  </div>
                   {friends &&
                     friends?.map(
                       (friend) =>

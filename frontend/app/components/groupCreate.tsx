@@ -109,7 +109,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
     <div className="bg-base-200 h-full space-y-4 rounded-lg">
       <div className="flex h-full flex-col justify-between">
         <div className="flex h-full flex-col gap-2">
-          <h2 className="text-md bg-base-400 rounded-t-md p-2 font-bold transition-all duration-1000 dark:text-white">
+          <h2 className="text-md bg-base-300 rounded-t-md p-2 font-bold transition-all duration-1000 dark:text-white">
             Create new group
           </h2>
 
@@ -152,7 +152,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
             </select>
             <button
               onClick={addMember}
-              className="bg-base-400 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
+              className="bg-base-300 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
             >
               Add
             </button>
@@ -197,7 +197,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
         <button
           onClick={createGroup}
-          className="bg-base-400 hover:bg-base-600 dark:bg-base-500 m-4 rounded-lg py-2 text-white transition duration-1000"
+          className="bg-base-300 hover:bg-base-600 dark:bg-base-500 m-4 rounded-lg py-2 text-white transition duration-1000"
         >
           Create group
         </button>

@@ -177,7 +177,7 @@ export default function ChatCard({ room, myData }: Props) {
                   // chat card start herte
                   <div className="bg-base-200 flex h-full w-full flex-col rounded-lg shadow-md">
                     <div className="flex-1 space-y-2 overflow-y-auto">
-                      <h1 className="dark:text-base-100 text-md bg-base-400 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000">
+                      <h1 className="dark:text-base-100 text-md bg-base-300 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000">
                         {roomName}
                       </h1>
                       <div className="mb-4 overflow-y-auto px-4 transition-all duration-1000">
@@ -187,12 +187,12 @@ export default function ChatCard({ room, myData }: Props) {
                               <div className="my-4 flex w-full justify-end gap-2.5">
                                 <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
                                   <div className="flex flex-row gap-2">
-                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-300">
                                       {convertTime(
                                         message.createdAt.toString(),
                                       )}
                                     </span>
-                                    <p className="dark:text-base-1000 bg-base-400 dark:bg-base-100 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000">
+                                    <p className="dark:text-base-1000 bg-base-300 dark:bg-base-100 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000">
                                       {message.message}
                                     </p>
                                   </div>
@@ -215,11 +215,11 @@ export default function ChatCard({ room, myData }: Props) {
                                   </div>
                                   <div className="flex flex-row gap-2">
                                     <p
-                                      className={`bg-base-100 dark:bg-base-400 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white`}
+                                      className={`bg-base-100 dark:bg-base-300 rounded-lg rounded-tl-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900 transition-all duration-1000 dark:text-white`}
                                     >
                                       {message.message}
                                     </p>
-                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
+                                    <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-300">
                                       {convertTime(
                                         message.createdAt.toString(),
                                       )}
@@ -235,7 +235,7 @@ export default function ChatCard({ room, myData }: Props) {
                     </div>
 
                     {/* input and send button */}
-                    <div className="bg-base-400 flex items-center gap-2 rounded-b-md p-3">
+                    <div className="bg-base-300 flex items-center gap-2 rounded-b-md p-3">
                       <input
                         type="text"
                         value={input}
