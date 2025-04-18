@@ -345,17 +345,18 @@ function HomePage() {
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
-
-      <Link className="flex w-[70vw] justify-start p-1" href="/publicChat">
-        <button className="bg-base-200 dark:bg-base-300 dark:hover:bg-base-400 hover:bg-base-300 flex flex-row items-center gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black px-4 py-2 font-bold text-black transition-all duration-200 hover:cursor-pointer dark:text-white">
-          <p className="flex flex-row items-center gap-2 text-xl font-bold">
-            Public Chat
-            <span className="text-2xl">
-              <TbLogout />
-            </span>
-          </p>
-        </button>
-      </Link>
+      <div className="flex w-[70vw] justify-start">
+        <Link className="flex p-1" href="/publicChat">
+          <button className="bg-base-200 dark:bg-base-300 dark:hover:bg-base-400 hover:bg-base-300 flex flex-row items-center gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black px-4 py-2 font-bold text-black transition-all duration-200 hover:cursor-pointer dark:text-white">
+            <p className="flex flex-row items-center gap-2 text-xl font-bold">
+              Public Chat
+              <span className="text-2xl">
+                <TbLogout />
+              </span>
+            </p>
+          </button>
+        </Link>
+      </div>
 
       <div className="flex w-[70vw] flex-row items-center justify-between gap-4 rounded-2xl p-1">
         {/* Navigation Tabs */}
