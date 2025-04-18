@@ -13,6 +13,7 @@ import { IoPeople } from "react-icons/io5";
 import { LuSend } from "react-icons/lu";
 import { TbLogout } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
+import Link from "next/link";
 
 const backend_url =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
@@ -475,9 +476,12 @@ export default function Home() {
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
-      <div className="bg-base-300 hover:bg-base-200 dark:bg-base-200 dark:hover:bg-base-350 absolute top-12 left-8 ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 px-4 py-2 transition-all duration-300 hover:cursor-pointer">
+      <Link
+        className="bg-base-300 hover:bg-base-200 dark:bg-base-200 dark:hover:bg-base-350 absolute top-12 left-8 ml-4 flex w-fit flex-row items-center justify-start gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black/80 px-4 py-2 transition-all duration-300 hover:cursor-pointer"
+        href={"/home"}
+      >
         Back <IoMdArrowRoundBack />
-      </div>
+      </Link>
 
       <div className="flex w-full flex-row gap-12">
         <div className="mt-6 flex w-[22vw] flex-col justify-center">
