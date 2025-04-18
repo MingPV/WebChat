@@ -250,6 +250,7 @@ function HomePage() {
     room: Room;
     myData: User;
     key: string;
+    roomName: string;
   };
   const [chatCardInfo, setChatCardInfo] = useState<ChatCardInfo | null>(null);
 
@@ -454,6 +455,7 @@ function HomePage() {
                             room: room,
                             myData: userData!,
                             key: room._id,
+                            roomName: displayRoomName(room),
                           });
                         }}
                       >
@@ -507,6 +509,7 @@ function HomePage() {
                   <ChatCard
                     room={chatCardInfo.room}
                     myData={chatCardInfo.myData}
+                    roomName={chatCardInfo.roomName}
                   />
                 </div>
               )}

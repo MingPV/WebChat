@@ -9,12 +9,12 @@ import { useSocket } from "../contexts/SocketContext";
 import Image from "next/image";
 import { LuSend } from "react-icons/lu";
 
-type Props = { room: Room; myData: User };
+type Props = { room: Room; myData: User; roomName: string };
 
 const backend_url =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
-export default function ChatCard({ room, myData }: Props) {
+export default function ChatCard({ room, myData, roomName }: Props) {
   const { socket } = useSocket();
 
   const [isOpen, setIsOpen] = useState(true);
@@ -22,12 +22,12 @@ export default function ChatCard({ room, myData }: Props) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false);
-  const [roomName, setRoomName] = useState("");
+  // const [roomName, setRoomName] = useState("");
 
   useEffect(() => {
     // Initialize socket connection
     console.log(room);
-    setRoomName(room.name.split(" ").pop() || "");
+    // setRoomName(room.name.split(" ").pop() || "");
 
     if (!socket) {
       console.log("mingza");
