@@ -16,7 +16,7 @@ import { TbLogout } from "react-icons/tb";
 import Link from "next/link";
 import Image from "next/image";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
-
+import { AiOutlineGlobal } from "react-icons/ai";
 // import { withAuth } from "@/utils/withAuth";
 
 const backend_url =
@@ -30,6 +30,7 @@ function HomePage() {
   const [tab, setTab] = useState<string>("chat");
   const [isLoading, setIsLoading] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
+  const [isClickedRoom, setIsClickedRoom] = useState(false);
 
   const { socket } = useSocket();
 
@@ -75,7 +76,7 @@ function HomePage() {
           throw new Error("Failed to fetch friends");
         }
         const { data: data2 } = await response2.json();
-        console.log(data2);
+        console.log("data2: setFriends", data2);
 
         const response3 = await fetch(
           `${backend_url}/rooms/userId/${data._id}`,
@@ -89,7 +90,7 @@ function HomePage() {
           throw new Error("Failed to fetch rooms");
         }
         const { data: data3 } = await response3.json();
-        console.log(data3);
+        console.log("data3", data3);
 
         setRooms(data3);
         setFriends(data2);
@@ -251,14 +252,57 @@ function HomePage() {
     key: string;
   };
   const [chatCardInfo, setChatCardInfo] = useState<ChatCardInfo | null>(null);
-  const [activeMobileView, setActiveMobileView] = useState<string>("list");
+
   const displayRoomName = (room: Room) => {
     const rawNameSplit = room.name.split(" ");
-    const name = rawNameSplit[rawNameSplit.length - 1];
+    if (room.isGroup) {
+      return rawNameSplit[0];
+    }
+    const id =
+      rawNameSplit[3] == userData?._id ? rawNameSplit[5] : rawNameSplit[3];
+    const name =
+      friends.find((friend) => friend.friend_id === id)?.friend_name ||
+      "Unknown";
+    console.log(rawNameSplit, id);
     return name;
   };
 
   if (!socket) return <p>🔄 Connecting to chat server...</p>;
+
+  const fetchRoomRefresh = () => {
+    setIsClickedRoom(false);
+    setTimeout(() => {
+      setIsClickedRoom(true);
+
+      setIsLoading(true);
+
+      fetch(`${backend_url}/rooms/userId/${userData?._id}`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch Room");
+          }
+          return response.json();
+        })
+        .then(({ data }) => {
+          setRooms(data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+          );
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setTimeout(() => setIsClickedRoom(false), 1000); // reset after animation ends
+        });
+    }, 50); // delay before re-enabling the animation
+  };
 
   const fetchFriendsRefresh = () => {
     // Reset animation first
@@ -300,6 +344,17 @@ function HomePage() {
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
+
+      <Link className="flex w-[70vw] justify-start p-1" href="/publicChat">
+        <button className="bg-base-200 dark:bg-base-300 dark:hover:bg-base-400 hover:bg-base-300 flex flex-row items-center gap-2 rounded-lg border-2 border-r-4 border-b-4 border-black px-4 py-2 font-bold text-black transition-all duration-200 dark:text-white">
+          <p className="flex flex-row items-center gap-2 text-xl font-bold">
+            to Public Chat
+            <span className="text-2xl">
+              <TbLogout />
+            </span>
+          </p>
+        </button>
+      </Link>
 
       <div className="flex w-[70vw] flex-row items-center justify-between gap-4 rounded-2xl p-1">
         {/* Navigation Tabs */}
@@ -347,8 +402,18 @@ function HomePage() {
         {tab === "chat" && (
           <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
             <div className="bg-base-200 flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4">
-              <div className="text-md bg-base-300 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
-                Friends
+              <div className="bg-base-300 flex w-full flex-row items-center justify-between rounded-lg dark:text-white">
+                <div className="text-md bg-base-300 rounded-lg rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
+                  Friends
+                </div>
+                <button
+                  className={`hover:text-base-500 px-4 text-2xl font-bold transition-transform duration-500 hover:cursor-pointer ${
+                    isClickedRoom ? "rotate-360" : "rotate-0"
+                  }`}
+                  onClick={fetchRoomRefresh}
+                >
+                  <TbRefresh />
+                </button>
               </div>
               {isLoading ? (
                 <div className="flex flex-col gap-2 text-sm">
@@ -394,6 +459,7 @@ function HomePage() {
                       >
                         <div className="flex flex-row items-center justify-between">
                           <p>{displayRoomName(room)}</p>
+
                           <p className="font-bold">
                             <IoIosArrowForward />
                           </p>
