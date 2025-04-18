@@ -119,7 +119,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
             </label>
             <input
               type="text"
-              className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
+              className="focus:ring-base-500 bg-base-100 w-full rounded-lg border-1 p-2 text-sm focus:ring-2 focus:outline-none"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               placeholder="ex. Raider group"
@@ -128,7 +128,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
           <div className="flex items-center gap-2 px-4">
             <select
-              className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
+              className="focus:ring-base-500 bg-base-100 w-full rounded-lg border-1 p-2 text-sm focus:ring-2 focus:outline-none"
               value={memberName}
               onChange={(e) => {
                 setMemberName(e.target.value);
@@ -152,7 +152,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
             </select>
             <button
               onClick={addMember}
-              className="bg-base-300 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
+              className="bg-base-300 hover:bg-base-400 dark:bg-base-300 hover:text-base-100 rounded-lg border-2 border-r-4 border-b-4 border-black px-4 py-2 font-bold text-black transition hover:cursor-pointer dark:text-white dark:hover:text-white"
             >
               Add
             </button>
@@ -182,7 +182,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
                           <button
                             onClick={() => removeMember(name, members_id[idx])}
-                            className="ml-2 text-red-700 transition-all duration-500 hover:text-red-900 dark:text-red-900 dark:hover:text-red-700"
+                            className="ml-2 text-red-700 transition-all duration-500 hover:cursor-pointer hover:text-red-900 dark:text-red-900 dark:hover:text-red-700"
                           >
                             <IoTrashBin />
                           </button>
@@ -197,7 +197,7 @@ export default function CreateGroup({ myData }: CreateGroupProps) {
 
         <button
           onClick={createGroup}
-          className="bg-base-300 hover:bg-base-600 dark:bg-base-500 m-4 rounded-lg py-2 text-white transition duration-1000"
+          className="bg-base-300 hover:bg-base-400 dark:bg-base-350 dark:hover:bg-base-300 m-4 rounded-lg border-2 border-r-4 border-b-4 border-black py-2 font-bold text-white transition duration-30 hover:cursor-pointer"
         >
           Create group
         </button>

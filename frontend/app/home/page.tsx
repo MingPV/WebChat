@@ -296,7 +296,7 @@ function HomePage() {
   };
 
   return (
-    <main className="bg-base-100 dark:bg-base-900 flex min-h-screen flex-col items-center justify-center px-4 py-24">
+    <main className="bg-base-100 dark:bg-base-1100/90 flex min-h-screen flex-col items-center justify-center px-4 py-24 font-mono">
       <div className="absolute top-4 right-4">
         <DarkThemeToggle />
       </div>
@@ -307,9 +307,9 @@ function HomePage() {
           <li>
             <button
               onClick={() => setTab("chat")}
-              className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
+              className={`hover:bg-base-300 dark:hover:bg-base-400 rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all hover:cursor-pointer ${
                 tab === "chat"
-                  ? "bg-base-300 dark:bg-base-600"
+                  ? "bg-base-300 dark:bg-base-400"
                   : "bg-base-200 dark:bg-base-300"
               }`}
             >
@@ -319,9 +319,9 @@ function HomePage() {
           <li>
             <button
               onClick={() => setTab("friends")}
-              className={`rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all duration-1000 ${
+              className={`hover:bg-base-300 dark:hover:bg-base-400 rounded-md border-2 border-r-4 border-b-4 border-black px-6 py-2 font-bold transition-all hover:cursor-pointer ${
                 tab === "friends"
-                  ? "bg-base-300 dark:bg-base-600"
+                  ? "bg-base-300 dark:bg-base-400"
                   : "bg-base-200 dark:bg-base-300"
               }`}
             >
@@ -379,10 +379,10 @@ function HomePage() {
                     userData ? (
                       <button
                         key={room._id}
-                        className={`mx-2 w-64 rounded-lg p-2 text-sm transition ${
+                        className={`mx-2 w-64 rounded-lg p-2 text-sm transition hover:cursor-pointer ${
                           chatCardInfo?.key === room._id
                             ? "bg-base-300"
-                            : "bg-base-100"
+                            : "bg-base-100 hover:bg-base-300"
                         } `}
                         onClick={() => {
                           setChatCardInfo({
@@ -413,7 +413,7 @@ function HomePage() {
                       or go to public chat here
                     </p>
                     <Link href="/publicChat">
-                      <button className="bg-base-300 hover:bg-base-300 rounded-lg px-4 py-2 transition ease-out">
+                      <button className="bg-base-300 hover:bg-base-400 rounded-lg border-2 border-r-4 border-b-4 px-4 py-2 transition ease-out hover:cursor-pointer">
                         To Public Chat
                       </button>
                     </Link>
@@ -465,13 +465,13 @@ function HomePage() {
                     <div className="flex w-full flex-row justify-between gap-2 p-2">
                       <input
                         type="text"
-                        className="focus:ring-base-500 w-full rounded-lg border-2 border-gray-300 bg-white p-2 text-sm focus:ring-2 focus:outline-none"
+                        className="focus:ring-base-500 bg-base-100 w-full rounded-lg border-1 p-2 text-sm focus:ring-2 focus:outline-none"
                         value={friendName}
                         placeholder="Enter friend's username..."
                         onChange={(e) => setFriendName(e.target.value)}
                       />
                       <div
-                        className="bg-base-300 hover:bg-base-600 dark:bg-base-500 rounded-lg px-4 py-2 text-white transition duration-1000"
+                        className="bg-base-300 hover:bg-base-400 dark:bg-base-300 hover:text-base-100 rounded-lg border-2 border-r-4 border-b-4 border-black px-4 py-2 font-bold text-black transition hover:cursor-pointer dark:text-white dark:hover:text-white"
                         onClick={handleAddFriend}
                       >
                         Add
@@ -487,7 +487,7 @@ function HomePage() {
                       Friend Requests
                     </p>
                     <button
-                      className={`hover:text-base-500 px-4 text-2xl font-bold transition-transform duration-500 ${
+                      className={`hover:text-base-500 px-4 text-2xl font-bold transition-transform duration-500 hover:cursor-pointer ${
                         isClicked ? "rotate-360" : "rotate-0"
                       }`}
                       onClick={fetchFriendsRefresh}
@@ -505,7 +505,7 @@ function HomePage() {
                           >
                             <div className="flex-1">{friend.friend_name}</div>
                             <div
-                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-lime-500"
+                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-lime-500 hover:text-lime-600"
                               onClick={() =>
                                 handleAcceptFriend(friend._id, friend.friend_id)
                               }
@@ -513,7 +513,7 @@ function HomePage() {
                               <FaCircleCheck />
                             </div>
                             <div
-                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-red-700"
+                              className="flex cursor-pointer items-center justify-center rounded-full text-center text-2xl text-red-700 hover:text-red-800"
                               onClick={() =>
                                 handleRejectFriend(friend._id, friend.friend_id)
                               }
