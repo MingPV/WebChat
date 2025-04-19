@@ -96,13 +96,14 @@ export const initSocket = (server: HttpServer) => {
 
     socket.on(
       'private_message',
-      ({ toSocketUsername, message, sender, createdAt }) => {
+      ({ toSocketUsername, message, sender, senderProfileUrl, createdAt }) => {
         let sendTo = userMap2.get(toSocketUsername)
         if (sendTo) {
           io.to(sendTo).emit('receive_private_message', {
             from: socket.id,
             message,
             sender,
+            senderProfileUrl,
             createdAt
           })
         }

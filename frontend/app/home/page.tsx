@@ -405,7 +405,7 @@ function HomePage() {
           <div className="flex h-[60vh] w-full flex-row justify-between gap-2 py-4">
             <div className="bg-base-200 flex w-72 flex-col gap-2 rounded-lg border-2 border-r-4 border-b-4">
               <div className="bg-base-300 flex w-full flex-row items-center justify-between rounded-lg dark:text-white">
-                <div className="text-md bg-base-300 rounded-lg rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
+                <div className="text-md bg-base-300 rounded-md rounded-b-none p-2 font-bold transition-all duration-1000 dark:text-white">
                   Friends
                 </div>
                 <button

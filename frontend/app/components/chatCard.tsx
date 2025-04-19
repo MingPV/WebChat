@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -18,7 +19,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
   const { socket } = useSocket();
 
   const [isOpen, setIsOpen] = useState(true);
-  const [messages, setMessages] = useState<Message[]>();
+  const [messages, setMessages] = useState<any[]>();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false);
@@ -42,13 +43,14 @@ export default function ChatCard({ room, myData, roomName }: Props) {
     // Listen for incoming messages
     socket.on(
       "receive_message",
-      ({ _id, message, sender, senderName, createdAt }) => {
+      ({ _id, message, sender, senderName, senderProfileUrl, createdAt }) => {
         console.log("got message");
-        const newMessage: Message = {
+        const newMessage: any = {
           _id: _id,
           roomId: room._id,
           sender: sender,
           senderName: senderName,
+          senderProfileUrl: senderProfileUrl,
           message: message,
           createdAt: createdAt,
         };
@@ -151,6 +153,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
         message: sentMessage.message,
         sender: sentMessage.sender,
         senderName: sentMessage.senderName,
+        senderProfileUrl: (myData as any).profile_url,
         createdAt: sentMessage.createdAt,
       });
     }
@@ -176,14 +179,15 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                 ) : (
                   // chat card start herte
                   <div className="bg-base-200 flex h-full w-full flex-col rounded-lg shadow-md">
+                    <h1 className="dark:text-base-100 text-md bg-base-300 rounded-t-md rounded-tr-sm p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000">
+                      {roomName}
+                    </h1>
                     <div className="flex-1 space-y-2 overflow-y-auto">
-                      <h1 className="dark:text-base-100 text-md bg-base-300 rounded-t-lg p-4 text-start font-semibold text-gray-900/80 transition-all duration-1000">
-                        {roomName}
-                      </h1>
                       <div className="mb-4 overflow-y-auto px-4 transition-all duration-1000">
-                        {messages?.map((message, index) => (
+                        {messages?.map((message: any, index) => (
                           <div key={index} className="w-full">
-                            {message.sender == myData._id ? (
+                            {message.sender._id == myData._id ||
+                            message.sender == myData._id ? (
                               <div className="my-4 flex w-full justify-end gap-2.5">
                                 <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
                                   <div className="flex flex-row gap-2">
@@ -202,7 +206,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                               <div className="my-4 flex items-start gap-2.5">
                                 <Image
                                   className="h-10 w-10 rounded-full"
-                                  src="/profile1.png"
+                                  src={`${message.sender?.profile_url || message.senderProfileUrl || "/profile-2.jpg"}`}
                                   alt="Jese image"
                                   width={48}
                                   height={48}
@@ -235,7 +239,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                     </div>
 
                     {/* input and send button */}
-                    <div className="bg-base-300 flex items-center gap-2 rounded-b-md p-3">
+                    <div className="bg-base-300 flex items-center gap-2 rounded-b-sm p-3">
                       <input
                         type="text"
                         value={input}

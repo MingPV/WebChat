@@ -21,14 +21,14 @@ const backend_url =
 export default function Home() {
   const [userData, setUserData] = useState<User>();
   const [rooms, setRooms] = useState<any[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
   const [input2, setInput2] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [me, setMe] = useState<string | null>(null);
   const [users, setUsers] = useState<string[]>([]);
   const [currentRoom, setCurrentRoom] = useState<string>("PublicRoom");
-  const [currentRoomMessages, setCurrentRoomMessages] = useState<Message[]>([]);
+  const [currentRoomMessages, setCurrentRoomMessages] = useState<any[]>([]);
   const [currentRoomUsers, setCurrentRoomUsers] = useState<any[]>();
   const [isJoined, setIsJoined] = useState(false);
   const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function Home() {
 
   const [privateChatName, setPrivateChatName] = useState("");
 
-  const [privateChat, setPrivateChat] = useState<Map<string, Message[]>>();
+  const [privateChat, setPrivateChat] = useState<Map<string, any[]>>();
 
   const [groupName, setGroupName] = useState("");
   const [joinName, setJoinName] = useState("");
@@ -63,20 +63,23 @@ export default function Home() {
       from,
       message,
       sender,
+      senderProfileUrl,
       createdAt,
     }: {
       from: string;
       message: string;
       sender: string;
+      senderProfileUrl: string;
       createdAt: Date;
     }) => {
       console.log(`ได้ข้อความจาก ${from}: ${message} sender : ${sender}`);
 
-      const newMessage: Message = {
+      const newMessage: any = {
         _id: "message.id",
         roomId: "no roomId",
         sender: "senderId",
         senderName: sender,
+        senderProfileUrl: senderProfileUrl,
         message,
         createdAt,
       };
@@ -124,20 +127,23 @@ export default function Home() {
       roomId,
       message,
       sender,
+      senderProfileUrl,
       createdAt,
       senderName,
     }: {
       roomId: string;
       message: string;
-      sender: string;
+      sender: any;
+      senderProfileUrl: string;
       createdAt: Date;
       senderName: string;
     }) => {
-      const newMessage: Message = {
+      const newMessage: any = {
         _id: "message.id",
         roomId,
         sender,
         senderName,
+        senderProfileUrl,
         message,
         createdAt,
       };
@@ -257,7 +263,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           roomId: roomId,
-          senderId: senderId,
+          senderId: senderId === "Public" ? null : senderId,
           senderName: senderName,
           content: message,
         }),
@@ -288,7 +294,7 @@ export default function Home() {
       const sentMessage = await createMessageByRoomId(
         "PublicRoom",
         message,
-        "Public",
+        userData?._id || "Public",
         me,
       );
 
@@ -301,6 +307,7 @@ export default function Home() {
           message: sentMessage.message,
           sender: sentMessage.sender,
           senderName: sentMessage.senderName,
+          senderProfileUrl: (userData as any)?.profile_url,
           createdAt: sentMessage.createdAt,
         });
       }
@@ -312,8 +319,9 @@ export default function Home() {
         socket.emit("send_message", {
           roomId: currentRoom,
           message: input,
-          sender: "meId",
+          sender: userData?._id || "meId",
           senderName: me,
+          senderProfileUrl: (userData as any)?.profile_url,
           createdAt: "sentMessage.createdAt",
         });
       }
@@ -422,6 +430,7 @@ export default function Home() {
         toSocketUsername: sendTo, // socket id ของคนที่มิงอยากส่งหา
         message: message,
         sender: me,
+        senderProfileUrl: (userData as any)?.profile_url,
         createdAt: "now??",
       });
 
@@ -634,7 +643,7 @@ export default function Home() {
 
             <div className="bg-base-200 dark:bg-base-200 mb-4 h-[60vh] overflow-y-auto px-4 transition-all duration-1000">
               {currentRoom == "PublicRoom"
-                ? messages.map((message, index) => (
+                ? messages.map((message: any, index) => (
                     <div key={index} className="w-full">
                       {message.senderName == me ? (
                         <div className="my-4 flex w-full justify-end gap-2.5">
@@ -653,7 +662,7 @@ export default function Home() {
                         <div className="my-4 flex items-start gap-2.5">
                           <Image
                             className="h-10 w-10 rounded-full"
-                            src="/profile1.png"
+                            src={`${message.sender?.profile_url || message.senderProfileUrl || "/profile-2.jpg"}`}
                             alt="Jese image"
                             width={48}
                             height={48}
@@ -678,7 +687,7 @@ export default function Home() {
                     </div>
                     // {message.senderName}
                   ))
-                : currentRoomMessages.map((message, index) => (
+                : currentRoomMessages.map((message: any, index) => (
                     <div key={index} className="w-full">
                       {message.senderName == me ? (
                         <div className="my-4 flex w-full justify-end gap-2.5">
@@ -697,7 +706,7 @@ export default function Home() {
                         <div className="my-4 flex items-start gap-2.5">
                           <Image
                             className="h-10 w-10 rounded-full"
-                            src="/profile1.png"
+                            src={`${message.sender?.profile_url || message.senderProfileUrl || "/profile-2.jpg"}`}
                             alt="Jese image"
                             width={48}
                             height={48}
@@ -808,7 +817,7 @@ export default function Home() {
                       <div className="my-4 flex items-start gap-2.5">
                         <Image
                           className="h-10 w-10 rounded-full"
-                          src="/profile1.png"
+                          src={`${message.sender?.profile_url || message.senderProfileUrl || "/profile-2.jpg"}`}
                           alt="Jese image"
                           width={48}
                           height={48}

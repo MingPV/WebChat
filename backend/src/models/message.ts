@@ -7,8 +7,8 @@ const schema = new Schema(
       required: true
     },
     sender: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
     senderName: {
       type: String,

@@ -98,7 +98,8 @@ export const messageService = {
   getByRoomId: (roomId: string) => Message.findOne({ roomId }),
   getAllMessagesByUserId: (userId: ObjectId) =>
     Message.find({ participants: userId }).populate('participants'),
-  getAllMessagesByRoomId: (roomId: string) => Message.find({ roomId }),
+  getAllMessagesByRoomId: (roomId: string) =>
+    Message.find({ roomId }).populate('sender'),
   updateByRoomId: (
     roomId: string,
     {

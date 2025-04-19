@@ -90,6 +90,8 @@ export const messageController = {
     }
     try {
       const messages = await messageService.getAllMessagesByRoomId(roomId)
+      console.log(messages)
+      console.log('messages')
       return res.status(StatusCodes.OK).json({
         data: messages,
         message: ReasonPhrases.OK,
