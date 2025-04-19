@@ -1,12 +1,11 @@
 "use client";
 
-import { DarkThemeToggle } from "flowbite-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-// import Link from "next/link";
+import Image from "next/image";
+import { DarkThemeToggle } from "flowbite-react";
 
-export default function Home() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,207 +17,164 @@ export default function Home() {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     setSigningUp(true);
 
+    if (!profileUrl) {
+      setError("Please select a profile picture");
+      setSigningUp(false);
+      return;
+    }
+    if (!email){
+      setError("Please enter your email address.");
+      setSigningUp(false);
+      return;
+    }
+    if (!username) {
+      setError("Please enter your username.");
+      setSigningUp(false);
+      return;
+    }
+    if (!password) {
+      setError("Please enter your password.");
+      setSigningUp(false);
+      return;
+    }
+    if (!repeatPassword) {
+      setError("Please repeat your password.");
+      setSigningUp(false);
+      return;
+    }
     if (password !== repeatPassword) {
       setError("Passwords do not match");
+      setSigningUp(false);
       return;
     }
     if (!terms) {
       setError("You must agree to the terms and conditions");
+      setSigningUp(false);
       return;
     }
-    // Call API to create account
+
     try {
       const response = await fetch("http://localhost:8080/auth/sign-up", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          username: username,
-          password: password,
-          profile_url: profileUrl,
-        }),
-        credentials: "include", // ใช้ credentials เพื่อส่ง cookies
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, username, password, profile_url: profileUrl }),
+        credentials: "include",
       });
 
-      console.log(response);
-
-      if (response.statusText == "Conflict") {
+      if (response.status === 409) {
         setError("Email already exists");
         setSigningUp(false);
         return;
       }
 
-      if (!response.ok) {
-        throw new Error("Failed to create account");
-      }
-      console.log("Sign-up successfully");
+      if (!response.ok) throw new Error("Failed to create account");
+
       setSigningUp(false);
       router.push("/home");
     } catch (error) {
       setSigningUp(false);
-      setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      );
+      setError(error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 
-  useEffect(() => {});
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-24 dark:bg-gray-900">
+    <main className="flex min-h-screen items-center justify-center bg-base-100 dark:bg-base-1100/90 px-4 py-12 font-mono">
       <div className="absolute top-4 right-4">
-        <DarkThemeToggle />
+        <DarkThemeToggle/>
       </div>
-      <div className="mb-8 flex flex-col justify-center gap-8">
-        <div className="mx-auto flex max-w-sm flex-col gap-2">
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Your Email
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <svg
-                className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 16"
-              >
-                <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
-                <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              id="email-address-icon"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-            />
-          </div>
-          <div className="">
-            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-              Username
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="dark:shadow-xs-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="">
-            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="dark:shadow-xs-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-5">
-            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-              Repeat password
-            </label>
-            <input
-              type="password"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-              className="dark:shadow-xs-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="mb-5 flex items-start">
-            <div className="flex h-5 items-center">
-              <input
-                id="terms"
-                type="checkbox"
-                checked={terms}
-                onChange={(e) => setTerms(e.target.checked)}
-                className="h-4 w-4 rounded-sm border border-gray-300 bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                required
+      <div className="w-full max-w-sm rounded-lg border border-black border-2 bg-base-150 dark:bg-base-200 p-6 shadow-[4px_4px_0px_#2f1c15]">
+        <div className="-mt-6 -mx-6 rounded-t-md bg-base-300 dark:bg-base-400 py-2 pl-5 text-lg font-bold text-white flex items-center">
+          <img src="/rider.png" alt="Rider Icon" className="h-8 w-8 mr-2" />
+          Rider
+        </div>
+
+        <h2 className="my-4 text-center text-[#2f1c15] text-lg font-bold">Sign Up</h2>
+
+        <h3 className="mt-6 mb-2 font-bold text-[#2f1c15]">Select Profile</h3>
+        <div className="flex flex-wrap justify-center gap-2 my-4">
+          {["/profile-1.webp", "/profile-2.jpg", "/profile-3.jpg"].map((url, index) => (
+            <div
+              key={index}
+              onClick={() => setProfileUrl(url)}
+              className={`border p-2 rounded-md cursor-pointer ${
+                profileUrl === url ? "bg-base-200 dark:bg-base-300" : "bg-white"
+              } hover:bg-base-200 dark:hover:bg-base-300`}
+            >
+              <Image
+                src={url}
+                alt={`profile${index + 1}`}
+                width={72}
+                height={72}
+                className="w-[72px] h-[48px] rounded-full object-cover"
               />
             </div>
+          ))}
+        </div>
 
-            <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-              I agree with the{" "}
-              <a
-                href="#"
-                className="text-blue-600 hover:underline dark:text-blue-500"
-              >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-md border border-[#2f1c15] bg-white px-3 py-2 text-sm text-[#2f1c15] placeholder:font-bold placeholder-[#8d6e63] shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c59d86]"
+          />
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full rounded-md border border-[#2f1c15] bg-white px-3 py-2 text-sm text-[#2f1c15] placeholder:font-bold placeholder-[#8d6e63] shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c59d86]"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-md border border-[#2f1c15] bg-white px-3 py-2 text-sm text-[#2f1c15] placeholder:font-bold placeholder-[#8d6e63] shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c59d86]"
+          />
+          <input
+            type="password"
+            placeholder="Repeat Password"
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            className="w-full rounded-md border border-[#2f1c15] bg-white px-3 py-2 text-sm text-[#2f1c15] placeholder:font-bold placeholder-[#8d6e63] shadow-inner focus:outline-none focus:ring-2 focus:ring-[#c59d86]"
+          />
+          <div className="flex items-start text-sm text-[#2f1c15]">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={terms}
+              onChange={(e) => setTerms(e.target.checked)}
+              className="mt-1 mr-2 h-4 w-4 rounded border border-[#2f1c15]"
+            />
+            <label htmlFor="terms">
+              I agree to the{" "}
+              <a href="#" className="underline text-[#8f5c47] hover:text-[#6f4032]">
                 terms and conditions
               </a>
             </label>
           </div>
-          <div className="flex justify-center">
-            <div
-              onClick={handleSubmit}
-              className="flex justify-center rounded-md bg-lime-300 px-4 py-2 font-bold text-lime-700 transition-all duration-300 hover:cursor-pointer hover:bg-lime-400"
-            >
-              <span>
-                {signingUp ? (
-                  <div className="animate-infinite animate-duration-[1500ms] animate-ease-linear animate-fill-backwards animate-pulse">
-                    Creating an account
-                  </div>
-                ) : (
-                  "Create an account"
-                )}
-              </span>
-            </div>
-          </div>
-          <div className="text-red-500">{error}</div>
-          <div className="flex flex-row gap-2">
-            <div
-              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile1.png" ? "bg-lime-200" : ""}`}
-              onClick={() => setProfileUrl("/profile1.png")}
-            >
-              Profile 1
-              <Image
-                src={"/profile1.png"}
-                alt={"profile1"}
-                width={128}
-                height={128}
-                className="rounded-full"
-              />
-            </div>
-            <div
-              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile2.jpg" ? "bg-lime-200" : ""}`}
-              onClick={() => setProfileUrl("/profile2.jpg")}
-            >
-              Profile 2
-              <Image
-                src={"/profile2.jpg"}
-                alt={"profile1"}
-                width={128}
-                height={128}
-                className="rounded-full"
-              />
-            </div>
-            <div
-              className={`flex flex-col gap-2 border p-4 hover:cursor-pointer hover:bg-lime-200 ${profileUrl === "/profile3.jpg" ? "bg-lime-200" : ""}`}
-              onClick={() => setProfileUrl("/profile3.jpg")}
-            >
-              Profile 3
-              <Image
-                src={"/profile3.jpg"}
-                alt={"profile1"}
-                width={128}
-                height={128}
-                className="rounded-full"
-              />
-            </div>
-          </div>
+
+          <button
+            type="submit"
+            disabled={signingUp}
+            className="px-6 mx-auto block rounded-md bg-base-300 dark:bg-base-400 py-2 text-sm font-bold text-white hover:bg-base-500 transition"
+          >
+            {signingUp ? "Creating..." : "Create Account"}
+          </button>
+
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
+          )}
+        </form>
+
+        <div className="mt-4 text-center text-sm text-base-1000 hover:text-base-400 underline cursor-pointer font-bold" onClick={() => router.push("/sign-in")}>
+          Sign In &gt;
         </div>
       </div>
     </main>
