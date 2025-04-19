@@ -6,7 +6,7 @@ import { Friend } from "@/types/friend";
 import { User } from "@/types/user";
 import { DarkThemeToggle } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatCard from "../components/chatCard";
 import { Room } from "@/types/room";
 import CreateGroup from "../components/groupCreate";
@@ -234,15 +234,17 @@ function HomePage() {
         credentials: "include",
       });
       if (!response.ok) {
-        throw new Error("Failed to add friend");
+        alert("There is no user with this username");
+        // throw new Error("Failed to add friend");
       }
       setFriendName("");
       console.log("Add friend successfully");
       console.log(response);
     } catch (error) {
-      console.error(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      );
+      alert("There is no user with this username");
+      // console.error(
+      //   error instanceof Error ? error.message : "An unknown error occurred",
+      // );
     }
   };
 

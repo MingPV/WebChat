@@ -737,6 +737,7 @@ export default function Home() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Added onKeyDown handler
                 className="text-md bg-base-100 ml-10 flex-1 rounded-lg border-none py-2 pr-2 pl-2 text-gray-900 transition-all duration-1000 focus:ring-0 focus:outline-none"
                 placeholder="Type your message..."
               />
@@ -850,6 +851,10 @@ export default function Home() {
                 type="text"
                 value={input2}
                 onChange={(e) => setInput2(e.target.value)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" &&
+                  handleSendMessage2(privateChatName, input2)
+                } // Added onKeyDown handler
                 className="bg-base-100 flex-1 rounded-lg border-none py-2 pr-2 pl-2 text-sm text-gray-900 transition-all duration-1000 focus:ring-0 focus:outline-none"
                 placeholder="Type your message..."
               />

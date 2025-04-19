@@ -5,7 +5,7 @@
 import { Message } from "@/types/message";
 import { Room } from "@/types/room";
 import { User } from "@/types/user";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../contexts/SocketContext";
 import Image from "next/image";
 import { LuSend } from "react-icons/lu";
@@ -24,6 +24,8 @@ export default function ChatCard({ room, myData, roomName }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isJoined, setIsJoined] = useState(false);
   // const [roomName, setRoomName] = useState("");
+
+  const bottomChatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Initialize socket connection
@@ -90,6 +92,10 @@ export default function ChatCard({ room, myData, roomName }: Props) {
 
     setIsLoading(false);
   }, [socket]);
+
+  useEffect(() => {
+    bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const createMessageByRoomId = async (
     roomId: string,
@@ -183,7 +189,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                       {roomName}
                     </h1>
                     <div className="flex-1 space-y-2 overflow-y-auto">
-                      <div className="mb-4 overflow-y-auto px-4 transition-all duration-1000">
+                      <div className="overflow-y-auto px-4 transition-all duration-1000">
                         {messages?.map((message: any, index) => (
                           <div key={index} className="w-full">
                             {message.sender._id == myData._id ||
@@ -236,6 +242,7 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                           // {message.senderName}
                         ))}
                       </div>
+                      <div ref={bottomChatRef}></div>
                     </div>
 
                     {/* input and send button */}
@@ -245,8 +252,8 @@ export default function ChatCard({ room, myData, roomName }: Props) {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) =>
-                          e.key === "Enter" && handleSendMessage
-                        }
+                          e.key === "Enter" && handleSendMessage()
+                        } // Added onKeyDown handler
                         placeholder="Type your message..."
                         className="bg-base-100 flex-1 rounded-lg px-3 py-2 focus:outline-none"
                       />
