@@ -1,41 +1,37 @@
-import { DarkThemeToggle } from "flowbite-react";
-import Link from "next/link";
-
 export default function Home() {
   return (
     <main
-      className="flex min-h-screen items-center justify-center bg-center bg-cover bg-no-repeat px-4 py-24 transition-all duration-500"
+      className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-24 transition-all duration-500"
       style={{ backgroundImage: "url('/bg5.jpg')" }}
     >
-
       {/* Neon Glow Frame */}
-      <div className="relative rounded-xl border-2 border-white p-26 shadow-[0_0_25px_6px_rgba(240,72,153,0.6)]">
+      <div className="relative rounded-xl border-2 border-white p-26 shadow-[0_0_25px_6px_rgba(240,72,153,0.6)] backdrop-blur-sm">
         <div className="flex flex-col items-center space-y-20 text-center">
-          <h1 className="text-5xl font-bold text-black dark:text-base-100">
+          <h1 className="dark:text-base-100 text-base-100 text-5xl font-bold">
             Welcome to RiderChat!
           </h1>
 
           <div className="flex flex-col items-center space-y-5">
             <div className="flex flex-row gap-20">
-              <Link
+              <a
                 href="/sign-in"
-                className="text-center rounded-lg border-2 border-black bg-base-200 px-8 py-3 text-xl font-semibold text-black transition-all duration-300 hover:bg-base-300 dark:border-base-100 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350"
+                className="hover:bg-base-300 dark:border-base-100 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350 text-base-100 border-base-200 rounded-lg border-2 bg-transparent px-8 py-3 text-center text-xl font-semibold backdrop-blur-lg transition-all duration-300"
               >
                 Login
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/publicChat"
-                className="text-center rounded-lg border-2 border-black bg-base-200 px-8 py-3 text-xl font-semibold text-black transition-all duration-300 hover:bg-base-300 dark:border-base-100 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350"
+                className="hover:bg-base-300 dark:border-base-200 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350 border-base-200 text-base-100 rounded-lg border-2 bg-transparent px-8 py-3 text-center text-xl font-semibold backdrop-blur-lg transition-all duration-300"
               >
                 Global Chat
-              </Link>
+              </a>
             </div>
 
-            <p className="text-base text-black dark:text-base-100">
-              Don’t have an account?{' '}
-              <Link href="/sign-up" className="underline hover:text-base-200">
+            <p className="dark:text-base-100 text-base-100 text-base">
+              Don’t have an account?{" "}
+              <a href="/sign-up" className="hover:text-base-200 underline">
                 Create an account
-              </Link>
+              </a>
             </p>
           </div>
         </div>
