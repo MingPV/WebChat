@@ -109,7 +109,7 @@ function HomePage() {
     });
 
     fetchUserData();
-  }, [socket]);
+  }, [socket, userData]);
 
   const handleSignOut = async () => {
     try {
