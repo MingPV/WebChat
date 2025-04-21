@@ -214,7 +214,13 @@ function HomePage() {
     }
 
     try {
-      const friend_response = await fetch(`${backend_url}/user/${friendName}`);
+      const friend_response = await fetch(`${backend_url}/user/${friendName}`, {
+        method: "GET", // Specify the GET method
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Add this line to include cookies
+      });
       if (!friend_response.ok) {
         throw new Error("Failed to fetch friend data");
       }

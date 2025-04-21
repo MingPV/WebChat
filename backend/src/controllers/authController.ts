@@ -184,7 +184,8 @@ export const authController = {
       // set cookie token
       res.cookie('access_token', '', {
         httpOnly: true,
-        secure: false,
+        secure: true,
+        sameSite: 'none',
         expires: new Date(Date.now() - 1)
       })
 
