@@ -176,6 +176,7 @@ export default function Home() {
               headers: {
                 "Content-Type": "application/json",
               },
+              credentials: "include", // Add this line to include cookies
             },
           );
           if (!response.ok) {
@@ -267,7 +268,9 @@ export default function Home() {
           senderName: senderName,
           content: message,
         }),
+        credentials: "include", // Add this line to include cookies
       });
+
       if (!response.ok) {
         throw new Error("Failed to create message");
       }
