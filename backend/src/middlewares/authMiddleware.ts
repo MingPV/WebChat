@@ -16,6 +16,8 @@ export const authMiddleware = async (
     // const { accessToken } = getAccessTokenFromHeaders(req.headers)
     const accessToken = req.cookies['access_token']
 
+    console.log('mingza00', accessToken)
+
     if (!accessToken) return next()
 
     const { id } = jwtVerify({ accessToken })
