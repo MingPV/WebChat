@@ -55,6 +55,10 @@ function HomePage() {
           method: "GET",
           credentials: "include",
         });
+        if (!response.ok) {
+          router.push("/sign-in");
+          return;
+        }
         console.log("response");
         console.log(response);
         if (!response.ok) {
