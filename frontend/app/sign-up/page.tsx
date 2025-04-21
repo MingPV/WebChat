@@ -108,23 +108,23 @@ export default function SignUp() {
 
         <h3 className="mt-6 mb-2 font-bold text-[#2f1c15]">Select Profile</h3>
         <div className="my-4 flex flex-wrap justify-center gap-2">
-          {["/profile-1.webp", "/profile-2.jpg", "/profile-3.jpg"].map(
+          {["/profile-1.webp", "/profile-2.jpg", "/profile-4.webp"].map(
             (url, index) => (
               <div
                 key={index}
                 onClick={() => setProfileUrl(url)}
-                className={`cursor-pointer rounded-md border p-2 ${
+                className={`cursor-pointer rounded-full border-2 transition-all duration-300 ${
                   profileUrl === url
-                    ? "bg-base-200 dark:bg-base-300"
+                    ? "bg-base-200 dark:bg-base-300 border-lime-500 shadow-2xl shadow-lime-200"
                     : "bg-white"
                 } hover:bg-base-200 dark:hover:bg-base-300`}
               >
                 <Image
                   src={url}
                   alt={`profile${index + 1}`}
-                  width={72}
-                  height={72}
-                  className="h-[48px] w-[72px] rounded-full object-cover"
+                  width={100}
+                  height={100}
+                  className="h-[100px] w-[100px] rounded-full object-cover"
                 />
               </div>
             ),
