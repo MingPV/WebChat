@@ -7,14 +7,14 @@ import { authValidation } from '@/validations'
 export const auth = (router: Router): void => {
   router.post(
     '/auth/sign-in',
-    authGuard.isGuest,
+    // authGuard.isGuest,
     authValidation.signIn,
     authController.signIn
   )
 
   router.post(
     '/auth/sign-up',
-    authGuard.isGuest,
+    // authGuard.isGuest,
     authValidation.signUp,
     authController.signUp
   )
@@ -23,7 +23,7 @@ export const auth = (router: Router): void => {
 
   router.post(
     '/auth/password/reset',
-    authGuard.isGuest,
+    // authGuard.isGuest,
     authValidation.resetPassword,
     authController.resetPassword
   )
