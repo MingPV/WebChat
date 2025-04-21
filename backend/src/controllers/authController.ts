@@ -52,6 +52,7 @@ export const authController = {
       res.cookie('access_token', accessToken, {
         httpOnly: true, // To prevent access from JavaScript
         secure: false, // Only send cookies over HTTPS in production
+        sameSite: 'none', // ต้องเป็น 'None' ถ้า cross-site
         expires: new Date(Date.now() + 3600 * 24000) // Set expiry (24 hour here)
       })
 
@@ -146,6 +147,7 @@ export const authController = {
       res.cookie('access_token', accessToken, {
         httpOnly: true, // To prevent access from JavaScript
         secure: false, // Only send cookies over HTTPS in production
+        sameSite: 'none', // ต้องเป็น 'None' ถ้า cross-site
         expires: new Date(Date.now() + 3600 * 24000) // Set expiry (1 hour here)
       })
 
