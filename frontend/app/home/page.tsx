@@ -45,9 +45,9 @@ function HomePage() {
       return;
     }
 
-    if (userData) {
-      socket.emit("set_username", userData.username);
-    }
+    // if (userData) {
+    //   socket.emit("set_username", userData.username);
+    // }
 
     const fetchUserData = async () => {
       try {
@@ -95,6 +95,7 @@ function HomePage() {
         setRooms(data3);
         setFriends(data2);
         setUserData(data);
+        socket.emit("set_username", data);
         setIsLoading(false);
       } catch (error) {
         console.error(
@@ -109,7 +110,7 @@ function HomePage() {
     });
 
     fetchUserData();
-  }, [socket, userData]);
+  }, [socket]);
 
   const handleSignOut = async () => {
     try {
