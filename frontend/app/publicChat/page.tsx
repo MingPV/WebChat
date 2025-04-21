@@ -325,7 +325,7 @@ export default function Home() {
           sender: userData?._id || "meId",
           senderName: me,
           senderProfileUrl: (userData as any)?.profile_url,
-          createdAt: "sentMessage.createdAt",
+          createdAt: new Date(),
         });
       }
     }
@@ -434,7 +434,7 @@ export default function Home() {
         message: message,
         sender: me,
         senderProfileUrl: (userData as any)?.profile_url,
-        createdAt: "now??",
+        createdAt: new Date(),
       });
 
       const newMessage: Message = {
@@ -480,6 +480,14 @@ export default function Home() {
       bottomPrivateChatRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [privateChat]);
+
+  const convertTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    // const day = date.toLocaleDateString("en-US", { weekday: "short" });
+    return `${hours}:${minutes}`;
+  };
 
   if (!socket || isLoading) return <p>🔄 Connecting to chat server...</p>;
 
@@ -653,7 +661,7 @@ export default function Home() {
                           <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
                             <div className="flex flex-row gap-2">
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                                11:42
+                                {convertTime(message.createdAt.toString())}
                               </span>
                               <p className="bg-base-300 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                                 {message.message}
@@ -681,7 +689,7 @@ export default function Home() {
                                 {message.message}
                               </p>
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                                11:46
+                                {convertTime(message.createdAt.toString())}
                               </span>
                             </div>
                           </div>
@@ -697,7 +705,7 @@ export default function Home() {
                           <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
                             <div className="flex flex-row gap-2">
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                                11:42
+                                {convertTime(message.createdAt.toString())}
                               </span>
                               <p className="bg-base-100 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                                 {message.message}
@@ -725,7 +733,7 @@ export default function Home() {
                                 {message.message}
                               </p>
                               <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                                11:46
+                                {convertTime(message.createdAt.toString())}
                               </span>
                             </div>
                           </div>
@@ -809,7 +817,7 @@ export default function Home() {
                         <div className="flex w-full max-w-[320px] flex-col items-end gap-1">
                           <div className="flex flex-row gap-2">
                             <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                              11:42
+                              {convertTime(message.createdAt.toString())}
                             </span>
                             <p className="bg-base-300 dark:bg-base-100 dark:text-base-1000 rounded-lg rounded-tr-none border-1 border-black/80 py-2.5 pr-4 pl-2 text-sm text-gray-900">
                               {message.message}
@@ -837,7 +845,7 @@ export default function Home() {
                               {message.message}
                             </p>
                             <span className="flex items-end justify-end text-xs font-normal text-gray-500 dark:text-gray-400">
-                              11:46
+                              {convertTime(message.createdAt.toString())}
                             </span>
                           </div>
                         </div>
