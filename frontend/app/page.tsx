@@ -14,13 +14,13 @@ export default function Home() {
           <div className="flex flex-col items-center space-y-5">
             <div className="flex flex-row gap-20">
               <a
-                href="/sign-in"
+                // href="/sign-in"
                 className="hover:bg-base-300 dark:border-base-100 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350 text-base-100 border-base-200 rounded-lg border-2 bg-transparent px-8 py-3 text-center text-xl font-semibold backdrop-blur-lg transition-all duration-300"
               >
                 Login
               </a>
               <a
-                href="/publicChat"
+                // href="/publicChat"
                 className="hover:bg-base-300 dark:border-base-200 dark:bg-base-300 dark:text-base-100 dark:hover:bg-base-350 border-base-200 text-base-100 rounded-lg border-2 bg-transparent px-8 py-3 text-center text-xl font-semibold backdrop-blur-lg transition-all duration-300"
               >
                 Global Chat
@@ -29,10 +29,18 @@ export default function Home() {
 
             <p className="dark:text-base-100 text-base-100 text-base">
               Don’t have an account?{" "}
-              <a href="/sign-up" className="hover:text-base-200 underline">
+              <a
+                // href="/sign-up"
+                className="hover:text-base-200 underline"
+              >
                 Create an account
               </a>
             </p>
+          </div>
+        </div>
+        <div className="mt-12 flex flex-col rounded-md bg-white/60 p-3 text-center text-sm text-red-700">
+          <div>
+            {"We're sorry, but we have no money to pay for the server costs."}
           </div>
         </div>
       </div>
